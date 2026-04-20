@@ -1,91 +1,216 @@
 import colorsData from "@/data/birthday_colors.json";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import ShareModal from "@/components/ShareModal";
 
-// Функция для определения цвета текста (черный или белый) в зависимости от фона
-function getContrastYIQ(hexcolor: string) {
-  if (!hexcolor) return "black";
+function getContrastColor(hexcolor: string) {
+  if (!hexcolor) return "#111827";
   const hex = hexcolor.replace("#", "");
-  const r = parseInt(hex.substr(0, 2), 16);
-  const g = parseInt(hex.substr(2, 2), 16);
-  const b = parseInt(hex.substr(4, 2), 16);
+  if (hex.length !== 6) return "#111827";
+
+  // ТЕПЕРЬ ВЫРЕЗАЕМ ПРАВИЛЬНО: от 0 до 2, от 2 до 4, от 4 до 6
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
   const yiq = (r * 299 + g * 587 + b * 114) / 1000;
-  return yiq >= 128 ? "black" : "white";
+  return yiq >= 128 ? "#111827" : "#ffffff";
 }
 
-export default function ColorPage({ params }: { params: { id: string } }) {
-  // Ищем цвет по ключу (например, "0101")
-  const colorInfo = (colorsData as any)[params.id];
+const MONTH_DECLENSIONS = [
+  "января",
+  "февраля",
+  "марта",
+  "апреля",
+  "мая",
+  "июня",
+  "июля",
+  "августа",
+  "сентября",
+  "октября",
+  "ноября",
+  "декабря",
+];
 
-  if (!colorInfo) {
-    notFound(); // Показывает 404, если дата не найдена
-  }
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const resolvedParams = await params;
+  const colorInfo = (colorsData as any)[resolvedParams.id];
+  if (!colorInfo) return { title: "Цвет не найден" };
+  const day = parseInt(colorInfo.date.split("-")[1], 10);
+  const month =
+    MONTH_DECLENSIONS[parseInt(colorInfo.date.split("-")[0], 10) - 1];
+  return {
+    title: `${day} ${month} — ${colorInfo.ru_name} | Colorstrology`,
+    description: colorInfo.ru_description,
+  };
+}
 
-  const textColor = getContrastYIQ(colorInfo.hex || "#ffffff");
+export default async function ColorPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const resolvedParams = await params;
+  const colorInfo = (colorsData as any)[resolvedParams.id];
+  if (!colorInfo) notFound();
+
+  const day = parseInt(colorInfo.date.split("-")[1], 10);
+  const month =
+    MONTH_DECLENSIONS[parseInt(colorInfo.date.split("-")[0], 10) - 1];
+  const dateText = `${day} ${month}`;
+
+  const textColor = getContrastColor(colorInfo.hex);
   const borderColor =
-    textColor === "white" ? "border-white/30" : "border-black/10";
+    textColor === "#ffffff" ? "rgba(255,255,255,0.2)" : "rgba(17,24,39,0.1)";
+  const glassBgColor =
+    textColor === "#ffffff" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.03)";
 
   return (
     <main
-      className="min-h-screen flex flex-col items-center justify-center p-6 transition-colors duration-500"
-      style={{ backgroundColor: colorInfo.hex || "#f3f4f6", color: textColor }}
+      className="min-h-screen flex flex-col items-center p-4 lg:p-12 transition-colors duration-500"
+      style={{ backgroundColor: colorInfo.hex || "#f3f4f6" }}
     >
-      <div className="w-full max-w-2xl">
-        <Link
-          href="/"
-          className={`inline-block mb-8 pb-1 border-b hover:opacity-70 transition-opacity ${borderColor}`}
-        >
-          ← Назад к календарю
-        </Link>
+      <div
+        className="w-full max-w-5xl relative z-10 pt-8"
+        style={{ color: textColor }}
+      >
+        <div className="mb-10">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 pb-1 hover:opacity-60 transition-opacity font-medium"
+            style={{ borderBottom: `1px solid ${borderColor}` }}
+          >
+            ← В календарь
+          </Link>
+        </div>
 
-        <h3 className="text-2xl font-light mb-2">{colorInfo.date}</h3>
-        <h1 className="text-5xl md:text-7xl font-bold mb-2">
-          {colorInfo.ru_name}
-        </h1>
-        <h2 className="text-xl md:text-2xl font-light opacity-80 mb-8 uppercase tracking-widest">
-          {colorInfo.en_name}
-        </h2>
+        <div className="text-center mb-12">
+          {/* Явное применение цвета текста, убрал opacity, чтобы избежать глюков прозрачности */}
+          <h3
+            className="text-xl md:text-3xl font-light mb-4 uppercase tracking-widest"
+            style={{ color: textColor }}
+          >
+            {dateText}
+          </h3>
+          {/* Убрал drop-shadow, так как белый drop-shadow на белом фоне давал эффект свечения */}
+          <h1
+            className="text-5xl sm:text-7xl lg:text-9xl font-black mb-4 tracking-tighter font-serif"
+            style={{ color: textColor }}
+          >
+            {colorInfo.ru_name}
+          </h1>
+          <h2
+            className="text-2xl md:text-4xl font-light font-serif italic"
+            style={{ color: textColor }}
+          >
+            {colorInfo.en_name}
+          </h2>
+        </div>
 
         <div
-          className={`text-xl md:text-2xl font-medium mb-8 p-6 rounded-2xl border ${borderColor} backdrop-blur-sm bg-white/5`}
+          className="text-center text-xl md:text-3xl font-medium mb-12 p-8 rounded-3xl backdrop-blur-md"
+          style={{
+            border: `1px solid ${borderColor}`,
+            backgroundColor: glassBgColor,
+            color: textColor,
+          }}
         >
           "{colorInfo.ru_feature}"
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-8">
-          {colorInfo.ru_keywords.map((word: string, index: number) => (
-            <span
-              key={index}
-              className={`px-4 py-2 rounded-full text-sm font-medium border ${borderColor} backdrop-blur-sm bg-white/10`}
+        {/* Остальные блоки аналогично с жестким цветом */}
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
+          <div
+            className="md:col-span-2 p-8 rounded-3xl backdrop-blur-md"
+            style={{
+              border: `1px solid ${borderColor}`,
+              backgroundColor: glassBgColor,
+            }}
+          >
+            <h3
+              className="text-2xl font-bold mb-4 font-serif"
+              style={{ color: textColor }}
             >
-              {word}
-            </span>
-          ))}
+              Психология цвета
+            </h3>
+            <p className="text-lg leading-relaxed" style={{ color: textColor }}>
+              {colorInfo.ru_description}
+            </p>
+          </div>
+          <div
+            className="p-8 rounded-3xl backdrop-blur-md flex flex-col justify-center"
+            style={{
+              border: `1px solid ${borderColor}`,
+              backgroundColor: glassBgColor,
+            }}
+          >
+            <h3
+              className="text-xl font-bold mb-4 font-serif"
+              style={{ color: textColor }}
+            >
+              Ключевые черты:
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {colorInfo.ru_keywords.map((word: string, i: number) => (
+                <span
+                  key={i}
+                  className="px-4 py-2 rounded-full text-sm font-bold"
+                  style={{
+                    backgroundColor: glassBgColor,
+                    border: `1px solid ${borderColor}`,
+                    color: textColor,
+                  }}
+                >
+                  {word}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <p className="text-lg leading-relaxed mb-12 opacity-90">
-          {colorInfo.ru_description}
-        </p>
-
         <div
-          className={`grid grid-cols-2 md:grid-cols-4 gap-4 py-6 border-t ${borderColor} opacity-80 text-sm`}
+          className="flex flex-col lg:flex-row justify-between items-center gap-8 p-8 rounded-3xl backdrop-blur-md"
+          style={{
+            border: `1px solid ${borderColor}`,
+            backgroundColor: glassBgColor,
+          }}
         >
-          <div>
-            <p className="font-bold mb-1">HEX</p>
-            <p>{colorInfo.hex || "Нет данных"}</p>
+          <div
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full text-sm"
+            style={{ color: textColor }}
+          >
+            <div>
+              <p className="font-bold mb-1 uppercase text-xs">HEX</p>
+              <p className="text-lg font-mono">{colorInfo.hex || "N/A"}</p>
+            </div>
+            <div>
+              <p className="font-bold mb-1 uppercase text-xs">RGB</p>
+              <p className="text-lg font-mono">
+                {colorInfo.rgb.replace(/R:|G:|B:/g, "")}
+              </p>
+            </div>
+            <div>
+              <p className="font-bold mb-1 uppercase text-xs">CMYK</p>
+              <p className="text-lg font-mono truncate">{colorInfo.cmyk}</p>
+            </div>
+            <div>
+              <p className="font-bold mb-1 uppercase text-xs">HSB</p>
+              <p className="text-lg font-mono truncate">{colorInfo.hsb}</p>
+            </div>
           </div>
-          <div>
-            <p className="font-bold mb-1">RGB</p>
-            <p>{colorInfo.rgb}</p>
-          </div>
-          <div>
-            <p className="font-bold mb-1">CMYK</p>
-            <p>{colorInfo.cmyk}</p>
-          </div>
-          <div>
-            <p className="font-bold mb-1">HSB</p>
-            <p>{colorInfo.hsb}</p>
-          </div>
+          <ShareModal
+            colorHex={colorInfo.hex || "#cccccc"}
+            colorName={colorInfo.ru_name}
+            colorEnName={colorInfo.en_name}
+            dateText={dateText}
+            textColor={textColor}
+            feature={colorInfo.ru_feature}
+          />
         </div>
       </div>
     </main>
