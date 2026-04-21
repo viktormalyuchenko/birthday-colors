@@ -1,6 +1,7 @@
 import Link from "next/link";
 import pantoneData from "@/data/pantone_days.json";
 import MonthNav from "@/components/MonthNav";
+import type { Metadata } from "next";
 
 const MONTH_NAMES = [
   "Январь",
@@ -17,8 +18,16 @@ const MONTH_NAMES = [
   "Декабрь",
 ];
 
-export const metadata = {
-  title: "Pantone Colorstrology | Цвета по дате рождения",
+export const metadata: Metadata = {
+  title: "Pantone Colorstrology | Цвета по дате рождения (Мишель Бернхардт)",
+  description:
+    "Система Colorstrology: 366 уникальных цветов Pantone и 12 оттенков месяцев. Найди свой Pantone-цвет и узнай свой психологический профиль.",
+  keywords: [
+    "pantone colorstrology",
+    "цвет пантон по дате рождения",
+    "мишель бернхардт",
+    "цвет дня рождения pantone",
+  ],
 };
 
 export default function PantoneIndex() {

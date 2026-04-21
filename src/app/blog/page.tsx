@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { getSortedPostsData } from "@/lib/blog";
+import type { Metadata } from "next";
 
-export const metadata = { title: "Блог | Colorstrology" };
+export const metadata: Metadata = {
+  title: "Блог о психологии цвета и астрологии",
+  description:
+    "Полезные статьи о том, как цвета влияют на нашу жизнь, карму и характер. Читайте о колорострологии, нумерологии и астрологии.",
+};
 
 export default function BlogIndex() {
   const allPostsData = getSortedPostsData();

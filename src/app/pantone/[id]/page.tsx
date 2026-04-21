@@ -1,6 +1,7 @@
 import pantoneData from "@/data/pantone_days.json";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 
 function getContrastColor(hex: string) {
   if (!hex) return "#111827";
@@ -11,6 +12,27 @@ function getContrastColor(hex: string) {
       parseInt(h.substring(4, 6), 16) * 114) /
     1000;
   return yiq >= 128 ? "#111827" : "#ffffff";
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const resolved = await params;
+  const data = (pantoneData as any)[resolved.id];
+
+  if (!data) return { title: "Цвет не найден" };
+
+  return {
+    title: `${data.date} — Цвет ${data.pantone_name} (Pantone ${data.pantone_code})`,
+    description: `Психологический профиль для рожденных ${data.date}. Ваш цвет — ${data.pantone_name}. ${data.profile.substring(0, 120)}...`,
+    keywords: [
+      data.pantone_name,
+      `Pantone ${data.pantone_code}`,
+      `цвет рождения ${data.date}`,
+    ],
+  };
 }
 
 export default async function PantoneColorPage({

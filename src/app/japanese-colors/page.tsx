@@ -1,8 +1,19 @@
-"use client";
-
 import Link from "next/link";
 import colorsData from "@/data/birthday_colors.json";
 import MonthNav from "@/components/MonthNav";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Японский календарь цветов (Tanjoshoku) на каждый день",
+  description:
+    "366 уникальных оттенков по дате рождения из японской системы Tanjoshoku. Найдите свой цвет, чтобы узнать скрытые черты характера и привлечь удачу.",
+  keywords: [
+    "японские цвета дня рождения",
+    "tanjoshoku",
+    "японский календарь цветов",
+    "цвет характера",
+  ],
+};
 
 const MONTH_NAMES = [
   "Январь",

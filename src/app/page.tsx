@@ -1,4 +1,11 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Энциклопедия цвета и характера | Colorstrology",
+  description:
+    "Узнайте свой личный цвет, лунную фазу и число судьбы. Главный агрегатор систем самопознания через цвет: Японский календарь, Нумерология, Colorstrology.",
+};
 
 export default function Home() {
   return (
