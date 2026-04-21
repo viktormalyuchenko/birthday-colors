@@ -1,96 +1,149 @@
 import Link from "next/link";
-import colorsData from "@/data/birthday_colors.json";
-import MonthNav from "@/components/MonthNav"; // Импортируем наше меню
-
-const MONTH_NAMES = [
-  "Январь",
-  "Февраль",
-  "Март",
-  "Апрель",
-  "Май",
-  "Июнь",
-  "Июль",
-  "Август",
-  "Сентябрь",
-  "Октябрь",
-  "Ноябрь",
-  "Декабрь",
-];
-const MONTH_DECLENSIONS = [
-  "января",
-  "февраля",
-  "марта",
-  "апреля",
-  "мая",
-  "июня",
-  "июля",
-  "августа",
-  "сентября",
-  "октября",
-  "ноября",
-  "декабря",
-];
 
 export default function Home() {
-  const colorsArray = Object.values(colorsData).sort((a: any, b: any) =>
-    a.date_mmdd.localeCompare(b.date_mmdd),
-  );
-  const groupedByMonth = colorsArray.reduce((acc: any, item: any) => {
-    const monthIndex = parseInt(item.date_mmdd.substring(0, 2), 10) - 1;
-    if (!acc[monthIndex]) acc[monthIndex] = [];
-    acc[monthIndex].push(item);
-    return acc;
-  }, []);
-
   return (
-    <main className="min-h-screen bg-slate-50 text-gray-900">
-      <section className="bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 text-white py-20 px-4">
-        <div className="max-w-5xl mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight font-serif">
-            Colorstrology
+    <main className="min-h-screen bg-[#F9F9F8] text-gray-900 pb-24">
+      {/* PREMIUM HERO */}
+      <section className="relative pt-32 pb-20 px-4 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[500px] bg-indigo-500/10 blur-[120px] rounded-full pointer-events-none" />
+        <div className="max-w-5xl mx-auto text-center relative z-10">
+          <p className="text-indigo-600 font-bold tracking-[0.2em] uppercase text-xs mb-6">
+            Энциклопедия цвета и характера
+          </p>
+          <h1 className="text-6xl md:text-8xl font-black mb-8 tracking-tighter text-gray-950 font-serif leading-[1.1]">
+            Познай себя <br className="hidden md:block" /> через цвет.
           </h1>
-          <p className="text-xl font-light text-indigo-100 mb-10 max-w-3xl mx-auto">
-            Узнайте цвет своего дня рождения и откройте скрытые черты характера.
+          <p className="text-xl md:text-2xl font-light text-gray-500 mb-12 max-w-2xl mx-auto leading-relaxed">
+            Уникальный агрегатор систем самопознания. Японский календарь,
+            цветовая нумерология и астрология.
           </p>
         </div>
       </section>
 
-      <div id="calendar" className="max-w-7xl mx-auto px-4 py-12">
-        {/* ИСПОЛЬЗУЕМ НОВЫЙ КОМПОНЕНТ */}
-        <MonthNav />
-
-        {groupedByMonth.map((monthDays: any[], index: number) => (
-          <section key={index} id={`month-${index}`} className="mb-20">
-            <h2 className="text-3xl font-black mb-6 text-gray-800 border-b-2 border-gray-100 pb-2">
-              {MONTH_NAMES[index]}
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {monthDays.map((item) => {
-                const day = parseInt(item.date.split("-")[1], 10);
-                return (
-                  <Link
-                    href={`/${item.date_mmdd}`}
-                    key={item.date_mmdd}
-                    className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col"
-                  >
-                    <div
-                      className="h-28 w-full transition-transform group-hover:scale-105 origin-bottom"
-                      style={{ backgroundColor: item.hex || "#e5e7eb" }}
-                    />
-                    <div className="p-3 bg-white z-10">
-                      <p className="text-xs font-bold text-indigo-500 mb-1 uppercase">
-                        {day} {MONTH_DECLENSIONS[index]}
-                      </p>
-                      <p className="text-sm font-bold text-gray-900 leading-tight">
-                        {item.ru_name}
-                      </p>
-                    </div>
-                  </Link>
-                );
-              })}
+      {/* BENTO GRID (Премиальная сетка) */}
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Главная карточка: Японский календарь (занимает 2 колонки) */}
+          <Link
+            href="/japanese-colors"
+            className="md:col-span-2 group relative overflow-hidden rounded-[2.5rem] bg-gray-950 text-white p-10 md:p-14 flex flex-col justify-end min-h-[400px] shadow-2xl transition-transform hover:-translate-y-1"
+          >
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1557672172-298e090bd0f1?q=80&w=1000&auto=format&fit=crop')] opacity-20 group-hover:opacity-30 transition-opacity bg-cover bg-center mix-blend-luminosity" />
+            <div className="relative z-10">
+              <span className="bg-white/20 text-white backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-6 inline-block">
+                База 366 дней
+              </span>
+              <h2 className="text-4xl md:text-6xl font-serif font-bold mb-4">
+                Японский
+                <br />
+                календарь
+              </h2>
+              <p className="text-gray-300 text-lg max-w-md mb-8">
+                Система Tanjoshoku. Узнайте свой личный оттенок по дате рождения
+                и откройте тайны своего характера.
+              </p>
+              <span className="inline-flex items-center gap-2 font-bold uppercase tracking-wider text-sm hover:gap-4 transition-all">
+                Открыть календарь <span className="text-xl">→</span>
+              </span>
             </div>
-          </section>
-        ))}
+          </Link>
+
+          {/* Карточка: Нумерология */}
+          <Link
+            href="/numerology"
+            className="group rounded-[2.5rem] bg-indigo-50 p-10 md:p-12 flex flex-col justify-between min-h-[400px] shadow-sm hover:shadow-xl hover:bg-indigo-100 transition-all border border-indigo-100/50"
+          >
+            <div>
+              <div className="w-14 h-14 bg-indigo-600 text-white rounded-full flex items-center justify-center text-2xl font-serif italic mb-6">
+                N
+              </div>
+              <h2 className="text-3xl font-serif font-bold text-gray-900 mb-4">
+                Цветовая
+                <br />
+                Нумерология
+              </h2>
+              <p className="text-gray-600 leading-relaxed">
+                Рассчитайте свое Число Судьбы и узнайте цвет вашей ауры,
+                планету-покровителя и скрытые таланты.
+              </p>
+            </div>
+            <span className="text-indigo-600 font-bold uppercase tracking-wider text-sm mt-8 group-hover:translate-x-2 transition-transform inline-block">
+              Рассчитать →
+            </span>
+          </Link>
+
+          {/* Карточка: Лунные цвета */}
+          <Link
+            href="/moon-colors"
+            className="group rounded-[2.5rem] bg-rose-50 p-10 md:p-12 flex flex-col justify-between min-h-[400px] shadow-sm hover:shadow-xl hover:bg-rose-100 transition-all border border-rose-100/50"
+          >
+            <div>
+              <div className="w-14 h-14 bg-rose-500 text-white rounded-full flex items-center justify-center text-2xl mb-6">
+                ☾
+              </div>
+              <h2 className="text-3xl font-serif font-bold text-gray-900 mb-4">
+                Лунный
+                <br />
+                Знак
+              </h2>
+              <p className="text-gray-600 leading-relaxed">
+                Ведическая астрология эмоций. Выберите свой лунный знак, чтобы
+                узнать цвет своего подсознания.
+              </p>
+            </div>
+            <span className="text-rose-600 font-bold uppercase tracking-wider text-sm mt-8 group-hover:translate-x-2 transition-transform inline-block">
+              Узнать цвет →
+            </span>
+          </Link>
+
+          {/* Карточка: Pantone Colorstrology */}
+          <Link
+            href="/pantone"
+            className="md:col-span-2 group relative overflow-hidden rounded-[2.5rem] bg-white border border-gray-200 p-10 md:p-14 flex flex-col justify-center min-h-[400px] shadow-sm"
+          >
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">
+              Pantone Colorstrology
+            </h2>
+            <p className="text-gray-500 text-lg max-w-lg mb-8">
+              Система Мишель Бернхардт. 366 цветов Pantone и 12 цветов месяцев,
+              объединяющие астрологию и психологию цвета.
+            </p>
+            <div className="flex gap-2">
+              {/* Декоративные кружочки Pantone */}
+              {["#CDA37F", "#D3B7D6", "#B1DBD9", "#E35D52"].map((color) => (
+                <div
+                  key={color}
+                  className="w-12 h-12 rounded-full border-4 border-white shadow-md"
+                  style={{ backgroundColor: color }}
+                />
+              ))}
+            </div>
+          </Link>
+
+          <Link
+            href="/moon-phase"
+            className="group md:col-span-2 relative overflow-hidden rounded-[2.5rem] bg-gray-950 text-white p-10 md:p-14 flex flex-col justify-end min-h-[400px] shadow-2xl transition-transform hover:-translate-y-1"
+          >
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1000&auto=format&fit=crop')] opacity-20 group-hover:opacity-30 transition-opacity bg-cover bg-center mix-blend-luminosity" />
+            <div className="relative z-10">
+              <span className="bg-white/20 text-white backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-6 inline-block">
+                Фаза Луны
+              </span>
+              <h2 className="text-4xl md:text-6xl font-serif font-bold mb-4">
+                Лунные
+                <br />
+                фазы
+              </h2>
+              <p className="text-gray-300 text-lg max-w-md mb-8">
+                Узнайте, создают ли ваши души Идеальную Полную Луну. Тренд,
+                покоривший миллионы сердец.
+              </p>
+              <span className="inline-flex items-center gap-2 font-bold uppercase tracking-wider text-sm hover:gap-4 transition-all">
+                Проверить совместимость <span className="text-xl">→</span>
+              </span>
+            </div>
+          </Link>
+        </div>
       </div>
     </main>
   );
