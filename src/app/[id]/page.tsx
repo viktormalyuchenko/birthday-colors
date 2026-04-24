@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import ShareModal from "@/components/ShareModal";
+import ColorDataGrid from "@/components/ColorDataGrid";
 
 function getContrastColor(hexcolor: string) {
   if (!hexcolor) return "#111827";
@@ -180,29 +181,13 @@ export default async function ColorPage({
             backgroundColor: glassBgColor,
           }}
         >
-          <div
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full text-sm"
-            style={{ color: textColor }}
-          >
-            <div>
-              <p className="font-bold mb-1 uppercase text-xs">HEX</p>
-              <p className="text-lg font-mono">{colorInfo.hex || "N/A"}</p>
-            </div>
-            <div>
-              <p className="font-bold mb-1 uppercase text-xs">RGB</p>
-              <p className="text-lg font-mono">
-                {colorInfo.rgb.replace(/R:|G:|B:/g, "")}
-              </p>
-            </div>
-            <div>
-              <p className="font-bold mb-1 uppercase text-xs">CMYK</p>
-              <p className="text-lg font-mono truncate">{colorInfo.cmyk}</p>
-            </div>
-            <div>
-              <p className="font-bold mb-1 uppercase text-xs">HSB</p>
-              <p className="text-lg font-mono truncate">{colorInfo.hsb}</p>
-            </div>
-          </div>
+          <ColorDataGrid
+            hex={colorInfo.hex}
+            rgb={colorInfo.rgb}
+            cmyk={colorInfo.cmyk}
+            hsb={colorInfo.hsb}
+            textColor={textColor}
+          />
           <ShareModal
             colorHex={colorInfo.hex || "#cccccc"}
             colorName={colorInfo.ru_name}
