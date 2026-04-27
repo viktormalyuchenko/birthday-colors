@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import ShareModal from "@/components/ShareModal";
 import ColorDataGrid from "@/components/ColorDataGrid";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 function getContrastColor(hexcolor: string) {
   if (!hexcolor) return "#111827";
@@ -99,13 +100,12 @@ export default async function ColorPage({
         style={{ color: textColor }}
       >
         <div className="mb-10">
-          <Link
-            href="/japanese-colors"
-            className="inline-flex items-center gap-2 pb-1 hover:opacity-60 transition-opacity font-medium"
-            style={{ borderBottom: `1px solid ${borderColor}` }}
-          >
-            ← В календарь
-          </Link>
+          <Breadcrumbs
+            items={[
+              { label: "Японский календарь", href: "/japanese-colors" },
+              { label: dateText },
+            ]}
+          />
         </div>
 
         <div className="text-center mb-12">

@@ -2,6 +2,7 @@ import pantoneData from "@/data/pantone_days.json";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const MONTH_DECLENSIONS = [
   "января",
@@ -81,13 +82,7 @@ export default async function PantoneColorPage({
       style={{ backgroundColor: data.hex, color: textColor }}
     >
       <div className="max-w-4xl mx-auto">
-        <Link
-          href="/pantone"
-          className="pb-1 mb-10 inline-block font-medium"
-          style={{ borderBottom: `1px solid ${borderColor}` }}
-        >
-          ← В календарь
-        </Link>
+        <Breadcrumbs items={[{ label: "Pantone по дате рождения" }]} />
         <h3 className="text-2xl opacity-80 mb-2">{data.date}</h3>
         <h1 className="text-6xl md:text-8xl font-black font-serif mb-4">
           {data.pantone_name}

@@ -1,3 +1,4 @@
+import Breadcrumbs from "@/components/Breadcrumbs";
 import NumerologyCalculator from "@/components/NumerologyCalculator";
 import type { Metadata } from "next";
 
@@ -17,6 +18,7 @@ export default function NumerologyIndex() {
   return (
     <main className="min-h-screen bg-[#F9F9F8] py-20 px-4">
       <div className="max-w-4xl mx-auto text-center mb-16">
+        <Breadcrumbs items={[{ label: "Цветовая Нумерология" }]} />
         <h1 className="text-5xl md:text-7xl font-black text-gray-900 mb-6 font-serif">
           Цветовая Нумерология
         </h1>

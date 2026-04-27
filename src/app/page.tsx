@@ -30,7 +30,8 @@ export default function Home() {
       {/* BENTO GRID (Премиальная сетка) */}
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Главная карточка: Японский календарь (занимает 2 колонки) */}
+          {/* РЯД 1 ------------------------------------------------ */}
+          {/* 1. Японский календарь (2 колонки) */}
           <Link
             href="/japanese-colors"
             className="md:col-span-2 group relative overflow-hidden rounded-[2.5rem] bg-gray-950 text-white p-10 md:p-14 flex flex-col justify-end min-h-[400px] shadow-2xl transition-transform hover:-translate-y-1"
@@ -55,7 +56,7 @@ export default function Home() {
             </div>
           </Link>
 
-          {/* Карточка: Нумерология */}
+          {/* 2. Нумерология (1 колонка) */}
           <Link
             href="/numerology"
             className="group rounded-[2.5rem] bg-indigo-50 p-10 md:p-12 flex flex-col justify-between min-h-[400px] shadow-sm hover:shadow-xl hover:bg-indigo-100 transition-all border border-indigo-100/50"
@@ -79,7 +80,8 @@ export default function Home() {
             </span>
           </Link>
 
-          {/* Карточка: Лунные цвета */}
+          {/* РЯД 2 ------------------------------------------------ */}
+          {/* 3. Лунные цвета (1 колонка) */}
           <Link
             href="/moon-colors"
             className="group rounded-[2.5rem] bg-rose-50 p-10 md:p-12 flex flex-col justify-between min-h-[400px] shadow-sm hover:shadow-xl hover:bg-rose-100 transition-all border border-rose-100/50"
@@ -103,10 +105,10 @@ export default function Home() {
             </span>
           </Link>
 
-          {/* Карточка: Pantone Colorstrology */}
+          {/* 4. Pantone Colorstrology (2 колонки) */}
           <Link
             href="/pantone"
-            className="md:col-span-2 group relative overflow-hidden rounded-[2.5rem] bg-white border border-gray-200 p-10 md:p-14 flex flex-col justify-center min-h-[400px] shadow-sm"
+            className="md:col-span-2 group relative overflow-hidden rounded-[2.5rem] bg-white border border-gray-200 p-10 md:p-14 flex flex-col justify-center min-h-[400px] shadow-sm hover:shadow-lg transition-shadow"
           >
             <h2 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">
               Pantone Colorstrology
@@ -116,7 +118,6 @@ export default function Home() {
               объединяющие астрологию и психологию цвета.
             </p>
             <div className="flex gap-2">
-              {/* Декоративные кружочки Pantone */}
               {["#CDA37F", "#D3B7D6", "#B1DBD9", "#E35D52"].map((color) => (
                 <div
                   key={color}
@@ -127,6 +128,8 @@ export default function Home() {
             </div>
           </Link>
 
+          {/* РЯД 3 ------------------------------------------------ */}
+          {/* 5. Фаза Луны (2 колонки) */}
           <Link
             href="/moon-phase"
             className="group md:col-span-2 relative overflow-hidden rounded-[2.5rem] bg-gray-950 text-white p-10 md:p-14 flex flex-col justify-end min-h-[400px] shadow-2xl transition-transform hover:-translate-y-1"
@@ -147,6 +150,59 @@ export default function Home() {
               </p>
               <span className="inline-flex items-center gap-2 font-bold uppercase tracking-wider text-sm hover:gap-4 transition-all">
                 Проверить совместимость <span className="text-xl">→</span>
+              </span>
+            </div>
+          </Link>
+
+          {/* 6. Цвет имени (1 колонка - адаптировано под дизайн узких карточек) */}
+          <Link
+            href="/name-color"
+            className="group rounded-[2.5rem] bg-orange-50 p-10 md:p-12 flex flex-col justify-between min-h-[400px] shadow-sm hover:shadow-xl hover:bg-orange-100 transition-all border border-orange-100/50"
+          >
+            <div>
+              <div className="w-14 h-14 bg-orange-400 text-white rounded-full flex items-center justify-center text-2xl font-serif italic mb-6">
+                Aa
+              </div>
+              <h2 className="text-3xl font-serif font-bold mb-4 text-gray-900">
+                Цвет имени
+              </h2>
+              <p className="text-gray-600 leading-relaxed">
+                Ваша личная палитра. Узнайте цвет своей души по буквам имени и
+                откройте новые грани своей личности.
+              </p>
+            </div>
+            <span className="text-orange-600 font-bold uppercase tracking-wider text-sm mt-8 group-hover:translate-x-2 transition-transform inline-block">
+              Узнать цвет →
+            </span>
+          </Link>
+
+          {/* РЯД 4 ------------------------------------------------ */}
+          {/* 7. Совместимость по Японским цветам (3 колонки - НА ВСЮ ШИРИНУ ВНИЗУ) */}
+          <Link
+            href="/color-compatibility"
+            className="md:col-span-3 group relative overflow-hidden rounded-[2.5rem] bg-indigo-50 p-8 md:p-14 flex flex-col justify-end min-h-[400px] shadow-sm hover:shadow-xl hover:bg-indigo-100 transition-all border border-indigo-100/50"
+          >
+            {/* Декоративные круги */}
+            <div className="absolute top-10 right-10 flex -space-x-8 opacity-60 group-hover:scale-110 transition-transform">
+              <div className="w-24 h-24 rounded-full bg-rose-400 mix-blend-multiply blur-sm"></div>
+              <div className="w-24 h-24 rounded-full bg-blue-400 mix-blend-multiply blur-sm"></div>
+            </div>
+
+            <div className="relative z-10 w-full md:w-3/4">
+              <span className="bg-indigo-200/50 text-indigo-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-6 inline-block">
+                Цветовая химия
+              </span>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4 text-gray-900 leading-tight">
+                Совместимость
+                <br />
+                Цветов
+              </h2>
+              <p className="text-gray-600 text-base md:text-lg mb-8 leading-relaxed max-w-2xl">
+                Смешайте цвета своих душ. Введите две даты рождения, чтобы
+                узнать психологическую химию вашей пары и ваш потенциал.
+              </p>
+              <span className="inline-flex items-center gap-2 text-indigo-600 font-bold uppercase tracking-wider text-sm group-hover:gap-4 transition-all">
+                Проверить пару <span className="text-xl">→</span>
               </span>
             </div>
           </Link>

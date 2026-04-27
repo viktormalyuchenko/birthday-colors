@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import ShareModal from "@/components/ShareModal";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 function getContrastColor(hexcolor: string) {
   if (!hexcolor) return "#111827";
@@ -64,13 +65,12 @@ export default async function NumerologyResultPage({
       style={{ backgroundColor: data.hex, color: textColor }}
     >
       <div className="w-full max-w-4xl relative z-10 pt-4">
-        <Link
-          href="/numerology"
-          className="inline-flex items-center gap-2 mb-10 pb-1 hover:opacity-60 font-medium"
-          style={{ borderBottom: `1px solid ${borderColor}` }}
-        >
-          ← Назад к калькулятору
-        </Link>
+        <Breadcrumbs
+          items={[
+            { label: "Нумерология", href: "/numerology" },
+            { label: `Число Судьбы ${data.number}` },
+          ]}
+        />
 
         <div className="text-center mb-12">
           <h3 className="text-2xl md:text-3xl font-light mb-6 uppercase tracking-widest opacity-90">
