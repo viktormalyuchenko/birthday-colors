@@ -22,9 +22,23 @@ export async function generateMetadata({
   const resolved = await params;
   const data = (numerologyData as any)[resolved.number];
   if (!data) return { title: "Не найдено" };
+
+  const cleanHex = (data.hex || "cccccc").replace("#", "");
+
   return {
-    title: `Число Судьбы ${data.number} — Цвет ${data.ru_name} | Нумерология`,
+    title: `Число Судьбы ${data.number} — Цвет ${data.ru_name}`,
     description: data.ru_description,
+    openGraph: {
+      title: `Моё число судьбы: ${data.number} (${data.ru_name})`,
+      description: data.ru_feature,
+      images: [
+        {
+          url: `/api/og?title=${encodeURIComponent(data.ru_name)}&hex=${cleanHex}&subtitle=${encodeURIComponent("Число Судьбы " + data.number)}&system=colorstrology.viktoor.ru`,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
   };
 }
 

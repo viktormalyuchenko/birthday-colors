@@ -28,10 +28,21 @@ export async function generateMetadata({
   const data = (moonColors as any)[resolved.sign];
   if (!data) return { title: "Знак не найден" };
 
+  const cleanHex = (data.hex || "cccccc").replace("#", "");
   return {
-    title: `Луна в знаке ${data.sign} — Ваш лунный цвет ${data.ru_name} | Colorstrology`,
+    title: `Луна в знаке ${data.sign} — Цвет ${data.ru_name}`,
     description: data.ru_description,
-    keywords: `луна в ${data.sign.toLowerCase()}, лунный знак ${data.sign.toLowerCase()}, лунный цвет, астрология цвета`,
+    openGraph: {
+      title: `Моя Луна в знаке ${data.sign}`,
+      description: data.ru_feature,
+      images: [
+        {
+          url: `/api/og?title=${encodeURIComponent(data.ru_name)}&hex=${cleanHex}&subtitle=${encodeURIComponent("Луна: " + data.sign)}&system=colorstrology.viktoor.ru`,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
   };
 }
 

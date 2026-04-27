@@ -42,12 +42,30 @@ export async function generateMetadata({
   const resolvedParams = await params;
   const colorInfo = (colorsData as any)[resolvedParams.id];
   if (!colorInfo) return { title: "Цвет не найден" };
+
   const day = parseInt(colorInfo.date.split("-")[1], 10);
   const month =
     MONTH_DECLENSIONS[parseInt(colorInfo.date.split("-")[0], 10) - 1];
+  const prettyDate = `${day} ${month}`;
+
+  // Убираем решетку из HEX для передачи в URL
+  const cleanHex = (colorInfo.hex || "cccccc").replace("#", "");
+
   return {
-    title: `${day} ${month} — ${colorInfo.ru_name} | Colorstrology`,
-    description: colorInfo.ru_description,
+    title: `${prettyDate} — Цвет души ${colorInfo.ru_name} | Японский календарь`,
+    description: `Ваш цветовой гороскоп на ${prettyDate}. Цвет: ${colorInfo.ru_name}. Узнайте скрытые черты вашего характера и судьбы.`,
+    openGraph: {
+      title: `${prettyDate} — Ваш цвет: ${colorInfo.ru_name}`,
+      description: colorInfo.ru_feature,
+      images: [
+        {
+          url: `/api/og?title=${encodeURIComponent(colorInfo.ru_name)}&hex=${cleanHex}&subtitle=${encodeURIComponent(prettyDate)}&system=colorstrology.viktoor.ru`,
+          width: 1200,
+          height: 630,
+          alt: `Цвет ${colorInfo.ru_name}`,
+        },
+      ],
+    },
   };
 }
 
@@ -82,7 +100,7 @@ export default async function ColorPage({
       >
         <div className="mb-10">
           <Link
-            href="/"
+            href="/japanese-colors"
             className="inline-flex items-center gap-2 pb-1 hover:opacity-60 transition-opacity font-medium"
             style={{ borderBottom: `1px solid ${borderColor}` }}
           >

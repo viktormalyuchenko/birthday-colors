@@ -3,9 +3,25 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 
+const MONTH_DECLENSIONS = [
+  "января",
+  "февраля",
+  "марта",
+  "апреля",
+  "мая",
+  "июня",
+  "июля",
+  "августа",
+  "сентября",
+  "октября",
+  "ноября",
+  "декабря",
+];
+
 function getContrastColor(hex: string) {
   if (!hex) return "#111827";
   const h = hex.replace("#", "");
+  if (h.length !== 6) return "#111827";
   const yiq =
     (parseInt(h.substring(0, 2), 16) * 299 +
       parseInt(h.substring(2, 4), 16) * 587 +
@@ -21,16 +37,20 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const resolved = await params;
   const data = (pantoneData as any)[resolved.id];
-
   if (!data) return { title: "Цвет не найден" };
 
+  // Делаем красивую дату
+  const day = parseInt(data.date.split("-")[1], 10);
+  const month = MONTH_DECLENSIONS[parseInt(data.date.split("-")[0], 10) - 1];
+  const prettyDate = `${day} ${month}`;
+
   return {
-    title: `${data.date} — Цвет ${data.pantone_name} (Pantone ${data.pantone_code})`,
-    description: `Психологический профиль для рожденных ${data.date}. Ваш цвет — ${data.pantone_name}. ${data.profile.substring(0, 120)}...`,
+    title: `${prettyDate} — Цвет ${data.pantone_name} (Pantone ${data.pantone_code})`,
+    description: `Психологический профиль для рожденных ${prettyDate}. Ваш цвет — ${data.pantone_name}. ${data.profile.substring(0, 120)}...`,
     keywords: [
       data.pantone_name,
       `Pantone ${data.pantone_code}`,
-      `цвет рождения ${data.date}`,
+      `цвет рождения ${prettyDate}`,
     ],
   };
 }
@@ -43,6 +63,11 @@ export default async function PantoneColorPage({
   const resolved = await params;
   const data = (pantoneData as any)[resolved.id];
   if (!data) notFound();
+
+  // Делаем красивую дату для отображения на странице
+  const day = parseInt(data.date.split("-")[1], 10);
+  const month = MONTH_DECLENSIONS[parseInt(data.date.split("-")[0], 10) - 1];
+  const prettyDate = `${day} ${month}`;
 
   const textColor = getContrastColor(data.hex);
   const borderColor =

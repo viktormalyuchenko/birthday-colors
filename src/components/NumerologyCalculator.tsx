@@ -7,12 +7,15 @@ function calculateLifePathNumber(dateString: string): number {
   const digits = dateString.replace(/\D/g, "");
   let sum = 0;
   for (let i = 0; i < digits.length; i++) sum += parseInt(digits[i], 10);
-  while (sum > 9) {
+
+  // Сводим к однозначному, КРОМЕ чисел 11, 22 и 33
+  while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
     let tempSum = 0;
     const sumStr = sum.toString();
     for (let i = 0; i < sumStr.length; i++) tempSum += parseInt(sumStr[i], 10);
     sum = tempSum;
   }
+
   return sum;
 }
 
