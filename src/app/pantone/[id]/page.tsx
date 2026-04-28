@@ -82,7 +82,7 @@ export default async function PantoneColorPage({
       style={{ backgroundColor: data.hex, color: textColor }}
     >
       <div className="max-w-4xl mx-auto">
-        <Breadcrumbs items={[{ label: "Pantone по дате рождения" }]} />
+        <Breadcrumbs items={[{ label: "Pantone", href: "/pantone" }]} />
         <h3 className="text-2xl opacity-80 mb-2">{data.date}</h3>
         <h1 className="text-6xl md:text-8xl font-black font-serif mb-4">
           {data.pantone_name}
