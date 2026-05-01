@@ -5,6 +5,7 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
 }
+@plugin "@tailwindcss/typography";
 
 /* Прячем скроллбар для меню месяцев, оставляя прокрутку */
 .hide-scrollbar::-webkit-scrollbar {

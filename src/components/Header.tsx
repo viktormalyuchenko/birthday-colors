@@ -6,14 +6,12 @@ import { usePathname } from "next/navigation";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const pathname = usePathname(); // Чтобы закрывать меню при смене страницы
+  const pathname = usePathname();
 
-  // Закрываем мобильное меню при переходе на новую страницу
   useEffect(() => {
     setIsMenuOpen(false);
   }, [pathname]);
 
-  // Блокируем скролл страницы, когда открыто мобильное меню
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -48,29 +46,35 @@ export default function Header() {
             Pantone
           </Link>
 
-          <Link
-            href="/numerology"
-            className="hover:text-gray-900 transition-colors relative group"
-          >
-            Нумерология
-            {/* Выпадающее мини-меню для нумерологии при наведении */}
+          {/* ОБЕРТКА DIV ВМЕСТО LINK (Исправление ошибки вложенных ссылок) */}
+          <div className="relative group cursor-pointer">
+            <Link
+              href="/numerology"
+              className="hover:text-gray-900 transition-colors flex items-center"
+            >
+              Нумерология
+              <span className="absolute -top-3 -right-5 text-[9px] bg-indigo-50 text-indigo-600 px-1.5 rounded-sm tracking-normal">
+                NEW
+              </span>
+            </Link>
+            {/* Выпадающее меню */}
             <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
               <div className="bg-white border border-gray-100 shadow-xl rounded-2xl p-2 flex flex-col min-w-[200px] text-left">
                 <Link
                   href="/numerology"
-                  className="px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors"
+                  className="px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors text-gray-500 hover:text-gray-900"
                 >
                   Число судьбы
                 </Link>
                 <Link
                   href="/name-color"
-                  className="px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors"
+                  className="px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors text-gray-500 hover:text-gray-900"
                 >
                   Цвет имени
                 </Link>
               </div>
             </div>
-          </Link>
+          </div>
 
           <Link
             href="/moon-colors"
@@ -79,23 +83,26 @@ export default function Header() {
             Луна
           </Link>
 
-          <Link
-            href="/color-compatibility"
-            className="hover:text-gray-900 transition-colors relative group"
-          >
-            Совместимость
-            {/* Выпадающее мини-меню для совместимости при наведении */}
+          {/* ОБЕРТКА DIV ВМЕСТО LINK */}
+          <div className="relative group cursor-pointer">
+            <Link
+              href="/color-compatibility"
+              className="hover:text-gray-900 transition-colors"
+            >
+              Совместимость
+            </Link>
+            {/* Выпадающее меню */}
             <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
               <div className="bg-white border border-gray-100 shadow-xl rounded-2xl p-2 flex flex-col min-w-[240px] text-left">
                 <Link
                   href="/color-compatibility"
-                  className="px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors"
+                  className="px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors text-gray-500 hover:text-gray-900"
                 >
                   Цветовая химия
                 </Link>
                 <Link
                   href="/moon-phase"
-                  className="px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors flex justify-between items-center"
+                  className="px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors flex justify-between items-center text-gray-500 hover:text-gray-900"
                 >
                   Фазы Луны{" "}
                   <span className="bg-rose-100 text-rose-600 text-[9px] px-2 py-0.5 rounded-full">
@@ -104,7 +111,7 @@ export default function Header() {
                 </Link>
               </div>
             </div>
-          </Link>
+          </div>
 
           <Link href="/blog" className="hover:text-gray-900 transition-colors">
             Блог
@@ -130,25 +137,21 @@ export default function Header() {
         </button>
       </div>
 
-      {/* МОБИЛЬНОЕ МЕНЮ (ПОЛНОЭКРАННОЕ) */}
+      {/* МОБИЛЬНОЕ МЕНЮ */}
       <div
         className={`fixed inset-0 bg-white z-50 overflow-y-auto pt-24 pb-12 px-6 lg:hidden transition-transform duration-500 ease-in-out ${isMenuOpen ? "translate-y-0" : "-translate-y-full"}`}
       >
         <div className="flex flex-col gap-10">
-          {/* Группа 1 */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4 border-b border-gray-100 pb-2">
               Календари
             </h4>
             <div className="flex flex-col gap-4 text-xl font-serif font-bold text-gray-900">
-              <Link href="/japanese-colors">
-                Японский календарь (Tanjoshoku)
-              </Link>
+              <Link href="/japanese-colors">Японский (Tanjoshoku)</Link>
               <Link href="/pantone">Pantone Colorstrology</Link>
             </div>
           </div>
 
-          {/* Группа 2 */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4 border-b border-gray-100 pb-2">
               Анализ личности
@@ -160,7 +163,6 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Группа 3 */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4 border-b border-gray-100 pb-2">
               Совместимость
@@ -176,7 +178,6 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Группа 4 */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4 border-b border-gray-100 pb-2">
               Проект
