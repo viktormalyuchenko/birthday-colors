@@ -1,4 +1,5 @@
 import colorsData from "@/data/birthday_colors.json";
+import colorsExtensions from "@/data/japanese_extensions.json";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -78,6 +79,7 @@ export default async function ColorPage({
   const resolvedParams = await params;
   const colorInfo = (colorsData as any)[resolvedParams.id];
   if (!colorInfo) notFound();
+  const extInfo = (colorsExtensions as any)[resolvedParams.id] || {};
 
   const day = parseInt(colorInfo.date.split("-")[1], 10);
   const month =
@@ -105,6 +107,7 @@ export default async function ColorPage({
               { label: "Японский календарь", href: "/japanese-colors" },
               { label: dateText },
             ]}
+            textColor={textColor}
           />
         </div>
 
@@ -191,6 +194,62 @@ export default async function ColorPage({
             </div>
           </div>
         </div>
+        {/* НОВЫЙ БЛОК: Глубокий анализ (Из japanese_extensions.json) */}
+        {(extInfo.strengths || extInfo.love) && (
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8 mb-12">
+            {/* Сильные и слабые стороны */}
+            <div
+              className="p-8 md:p-10 rounded-3xl backdrop-blur-md flex flex-col gap-6"
+              style={{
+                border: `1px solid ${borderColor}`,
+                backgroundColor: glassBgColor,
+              }}
+            >
+              <div>
+                <h3 className="text-xl font-bold mb-3 font-serif flex items-center gap-2">
+                  <span className="text-green-500">✦</span> Сильные стороны
+                </h3>
+                <ul className="list-disc list-inside opacity-90 space-y-1">
+                  {extInfo.strengths?.map((s: string, i: number) => (
+                    <li key={i}>{s}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-3 font-serif flex items-center gap-2">
+                  <span className="text-red-400">✧</span> Теневая сторона
+                </h3>
+                <ul className="list-disc list-inside opacity-80 space-y-1">
+                  {extInfo.weaknesses?.map((w: string, i: number) => (
+                    <li key={i}>{w}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Карьера и Любовь */}
+            <div
+              className="p-8 md:p-10 rounded-3xl backdrop-blur-md flex flex-col gap-6"
+              style={{
+                border: `1px solid ${borderColor}`,
+                backgroundColor: glassBgColor,
+              }}
+            >
+              <div>
+                <h3 className="text-xl font-bold mb-2 font-serif opacity-70 uppercase tracking-widest text-sm">
+                  Карьера и Призвание
+                </h3>
+                <p className="opacity-95 leading-relaxed">{extInfo.career}</p>
+              </div>
+              <div className="mt-auto">
+                <h3 className="text-xl font-bold mb-2 font-serif opacity-70 uppercase tracking-widest text-sm">
+                  Любовь и Отношения
+                </h3>
+                <p className="opacity-95 leading-relaxed">{extInfo.love}</p>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div
           className="flex flex-col lg:flex-row justify-between items-center gap-8 p-8 rounded-3xl backdrop-blur-md"

@@ -38,13 +38,11 @@ function RealisticMoon({
   size?: number;
   glow?: boolean;
 }) {
-  const uniqueId = useId(); // Генерируем уникальный ID для маски, чтобы луны не конфликтовали
-
+  const uniqueId = useId();
   const isWaxing = phase <= 0.5;
   const normalizedPhase = isWaxing ? phase * 2 : (phase - 0.5) * 2;
   const rx = Math.abs(Math.cos(normalizedPhase * Math.PI)) * 100;
 
-  // Строим SVG Path для ОСВЕЩЕННОЙ части
   let d = "";
   if (isWaxing) {
     if (normalizedPhase < 0.5)
@@ -56,7 +54,6 @@ function RealisticMoon({
     else d = `M 100,0 A 100,100 0 0,0 100,200 A ${rx},100 0 0,1 100,0`;
   }
 
-  // Если Полнолуние или Новолуние
   if (phase <= 0.01 || phase >= 0.99)
     d = `M 100,0 A 100,100 0 0,1 100,200 A 100,100 0 0,1 100,0`;
   if (phase > 0.49 && phase < 0.51)
@@ -65,12 +62,11 @@ function RealisticMoon({
   return (
     <div
       style={{ width: size, height: size }}
-      className={`relative rounded-full ${glow ? "drop-shadow-[0_0_25px_rgba(255,255,255,0.6)]" : ""}`}
+      className={`relative rounded-full overflow-hidden ${glow ? "drop-shadow-[0_0_30px_rgba(255,255,255,0.7)]" : ""}`}
     >
-      {/* Темный фон (невидимая сторона Луны) */}
-      <div className="absolute inset-0 rounded-full bg-neutral-900 opacity-60 border border-white/10" />
+      {/* Темный фон без рамок */}
+      <div className="absolute inset-0 bg-[#0a0a0c] opacity-80" />
 
-      {/* Освещенная текстура через SVG-маску */}
       <svg
         width={size}
         height={size}
@@ -82,14 +78,14 @@ function RealisticMoon({
             <path d={d} />
           </clipPath>
         </defs>
-        {/* Фильтр контраста и сепии для фото луны */}
+        {/* Увеличим масштаб картинки чуть-чуть (xMidYMid slice), чтобы срезать возможные черные края исходника */}
         <image
           href={MOON_IMAGE_URL}
           width="200"
           height="200"
           clipPath={`url(#moon-clip-${uniqueId})`}
           preserveAspectRatio="xMidYMid slice"
-          filter="grayscale(100%) contrast(1.2)"
+          filter="grayscale(100%) contrast(1.3) brightness(1.1)"
         />
       </svg>
     </div>

@@ -65,6 +65,14 @@ export default function Footer() {
                 Лунные цвета
               </Link>
             </li>
+            <li>
+              <Link
+                href="/luscher-test"
+                className="hover:text-white transition-colors"
+              >
+                Тест Лушера
+              </Link>
+            </li>
           </ul>
         </div>
 

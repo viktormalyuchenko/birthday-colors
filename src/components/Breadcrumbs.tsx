@@ -5,25 +5,38 @@ interface BreadcrumbItem {
   href?: string;
 }
 
-export default function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
+interface BreadcrumbsProps {
+  items: BreadcrumbItem[];
+  textColor?: string; // Добавляем пропс для цвета
+}
+
+export default function Breadcrumbs({ items, textColor }: BreadcrumbsProps) {
   return (
-    <nav className="flex items-center gap-2 text-xs md:text-sm font-bold uppercase tracking-widest text-gray-400 mb-10">
-      <Link href="/" className="hover:text-indigo-600 transition-colors">
+    <nav
+      className="flex items-center gap-2 text-xs md:text-sm font-bold uppercase tracking-widest mb-10 opacity-70"
+      style={{ color: textColor || "#9CA3AF" }} // Используем цвет текста страницы или дефолтный серый
+    >
+      <Link href="/" className="hover:opacity-60 transition-opacity">
         Главная
       </Link>
 
       {items.map((item, index) => (
         <div key={index} className="flex items-center gap-2">
-          <span>/</span>
+          <span className="opacity-50">/</span>
           {item.href ? (
             <Link
               href={item.href}
-              className="hover:text-indigo-600 transition-colors"
+              className="hover:opacity-60 transition-opacity"
             >
               {item.label}
             </Link>
           ) : (
-            <span className="text-gray-900">{item.label}</span>
+            <span
+              style={{ color: textColor || "#111827" }}
+              className="opacity-100"
+            >
+              {item.label}
+            </span>
           )}
         </div>
       ))}
