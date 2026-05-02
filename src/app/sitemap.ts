@@ -3,7 +3,7 @@ import japaneseColors from "@/data/birthday_colors.json";
 import numerologyData from "@/data/numerology_colors.json";
 import moonColors from "@/data/moon_colors.json";
 
-const BASE_URL = "https://colorstrology.viktoor.ru";
+const BASE_URL = "https://colorstrology.ru";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const sitemapData: MetadataRoute.Sitemap = [

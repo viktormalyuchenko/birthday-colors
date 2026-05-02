@@ -61,7 +61,7 @@ export async function generateMetadata({
       description: colorInfo.ru_feature,
       images: [
         {
-          url: `/api/og?title=${encodeURIComponent(colorInfo.ru_name)}&hex=${cleanHex}&subtitle=${encodeURIComponent(prettyDate)}&system=colorstrology.viktoor.ru`,
+          url: `/api/og?title=${encodeURIComponent(colorInfo.ru_name)}&hex=${cleanHex}&subtitle=${encodeURIComponent(prettyDate)}&system=colorstrology.ru`,
           width: 1200,
           height: 630,
           alt: `Цвет ${colorInfo.ru_name}`,

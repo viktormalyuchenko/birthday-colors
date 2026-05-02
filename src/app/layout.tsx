@@ -15,7 +15,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://colorstrology.viktoor.ru"),
+  metadataBase: new URL("https://colorstrology.ru"),
   title: {
     default: "Colorstrology | Ваш цвет по дате рождения",
     template: "%s | Colorstrology",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     title: "Colorstrology — Познай себя через цвет",
     description:
       "Узнайте, какой оттенок управляет вашей судьбой по дате рождения.",
-    url: "https://colorstrology.viktoor.ru",
+    url: "https://colorstrology.ru",
     siteName: "Colorstrology",
     locale: "ru_RU",
     type: "website",

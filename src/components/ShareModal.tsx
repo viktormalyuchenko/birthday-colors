@@ -100,7 +100,7 @@ export default function ShareModal({
 
     ctx.font = "30px sans-serif";
     ctx.globalAlpha = 0.7; // Полупрозрачность для ссылки
-    ctx.fillText("colorstrology.viktoor.ru", width / 2, 1760);
+    ctx.fillText("colorstrology.ru", width / 2, 1760);
     ctx.globalAlpha = 1.0;
 
     // 7. Скачиваем

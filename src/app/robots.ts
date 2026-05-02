@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://colorstrology.viktoor.ru/sitemap.xml",
+    sitemap: "https://colorstrology.ru/sitemap.xml",
   };
 }

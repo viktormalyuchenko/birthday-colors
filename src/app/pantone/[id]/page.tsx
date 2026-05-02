@@ -61,7 +61,7 @@ export async function generateMetadata({
       description: data.profile.substring(0, 150) + "...",
       images: [
         {
-          url: `/api/og?title=${encodeURIComponent(data.pantone_name)}&hex=${data.hex.replace("#", "")}&subtitle=${encodeURIComponent(prettyDate + " | Pantone")}&system=colorstrology.viktoor.ru`,
+          url: `/api/og?title=${encodeURIComponent(data.pantone_name)}&hex=${data.hex.replace("#", "")}&subtitle=${encodeURIComponent(prettyDate + " | Pantone")}&system=colorstrology.ru`,
           width: 1200,
           height: 630,
         },

@@ -34,7 +34,7 @@ export async function generateMetadata({
       description: data.ru_feature,
       images: [
         {
-          url: `/api/og?title=${encodeURIComponent(data.ru_name)}&hex=${cleanHex}&subtitle=${encodeURIComponent("Число Судьбы " + data.number)}&system=colorstrology.viktoor.ru`,
+          url: `/api/og?title=${encodeURIComponent(data.ru_name)}&hex=${cleanHex}&subtitle=${encodeURIComponent("Число Судьбы " + data.number)}&system=colorstrology.ru`,
           width: 1200,
           height: 630,
         },
