@@ -40,19 +40,33 @@ export async function generateMetadata({
   const data = (pantoneData as any)[resolved.id];
   if (!data) return { title: "Цвет не найден" };
 
-  // Делаем красивую дату
   const day = parseInt(data.date.split("-")[1], 10);
   const month = MONTH_DECLENSIONS[parseInt(data.date.split("-")[0], 10) - 1];
   const prettyDate = `${day} ${month}`;
 
   return {
-    title: `${prettyDate} — Цвет ${data.pantone_name} (Pantone ${data.pantone_code})`,
-    description: `Психологический профиль для рожденных ${prettyDate}. Ваш цвет — ${data.pantone_name}. ${data.profile.substring(0, 120)}...`,
+    // В Title пишем самые "вкусные" ключевые слова
+    title: `Цвет рождения ${prettyDate}: ${data.pantone_name} | Колорострология Pantone`,
+    description: `Ваш личный цвет по дате рождения ${prettyDate} в системе Колорострологии Мишель Бернхардт — ${data.pantone_name} (Pantone ${data.pantone_code}). Узнайте свой психологический профиль и как этот цвет привлекает удачу.`,
     keywords: [
+      `цвет по дате рождения ${prettyDate}`,
+      "колорострология",
+      "мишель бернхардт",
       data.pantone_name,
       `Pantone ${data.pantone_code}`,
-      `цвет рождения ${prettyDate}`,
+      "астрология цвета",
     ],
+    openGraph: {
+      title: `${prettyDate} — Ваш цвет: ${data.pantone_name} (Pantone)`,
+      description: data.profile.substring(0, 150) + "...",
+      images: [
+        {
+          url: `/api/og?title=${encodeURIComponent(data.pantone_name)}&hex=${data.hex.replace("#", "")}&subtitle=${encodeURIComponent(prettyDate + " | Pantone")}&system=colorstrology.viktoor.ru`,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
   };
 }
 
@@ -128,6 +142,102 @@ export default async function PantoneColorPage({
             <p className="text-lg opacity-90 leading-relaxed">{data.benefit}</p>
           </div>
         </div>
+        {/* БЛОК ПЕРЕЛИНКОВКИ ДЛЯ SEO */}
+        <div
+          className="mt-16 pt-12 text-center"
+          style={{ borderTop: `1px solid ${borderColor}` }}
+        >
+          <h3
+            className="text-2xl font-bold font-serif mb-8"
+            style={{ color: textColor }}
+          >
+            Узнайте больше о своей дате
+          </h3>
+          <div className="flex flex-col md:flex-row justify-center gap-6">
+            <Link
+              href={`/${data.date_mmdd}`}
+              className="px-8 py-5 rounded-2xl backdrop-blur-md transition-transform hover:-translate-y-1"
+              style={{
+                backgroundColor: glassBgColor,
+                border: `1px solid ${borderColor}`,
+                color: textColor,
+              }}
+            >
+              <span className="block text-xs uppercase tracking-widest opacity-60 mb-1">
+                Colorstrology
+              </span>
+              <span className="font-bold text-lg">
+                Ваш цвет по Японскому календарю →
+              </span>
+            </Link>
+
+            <Link
+              href="/numerology"
+              className="px-8 py-5 rounded-2xl backdrop-blur-md transition-transform hover:-translate-y-1"
+              style={{
+                backgroundColor: glassBgColor,
+                border: `1px solid ${borderColor}`,
+                color: textColor,
+              }}
+            >
+              <span className="block text-xs uppercase tracking-widest opacity-60 mb-1">
+                Пифагор
+              </span>
+              <span className="font-bold text-lg">Ваше Число Судьбы →</span>
+            </Link>
+          </div>
+        </div>
+        {/* СЕО БЛОК (В самом низу) */}
+        <article className="mt-24 pt-12 border-t border-gray-200 prose prose-lg max-w-4xl mx-auto text-gray-700">
+          <h2 className="text-3xl font-black font-serif text-gray-900 mb-6">
+            Что такое Pantone Colorstrology?
+          </h2>
+          <p>
+            <strong>Colorstrology (Колорострология)</strong> — это уникальная
+            система самопознания, созданная астрологом и нумерологом Мишель
+            Бернхардт (Michele Bernhardt) совместно с мировым институтом цвета{" "}
+            <strong>Pantone</strong>. Эта система объединяет классическую
+            астрологию, вибрации чисел и психологию цвета.
+          </p>
+          <h3 className="text-2xl font-bold font-serif text-gray-900 mt-8 mb-4">
+            Как работает цвет по дате рождения?
+          </h3>
+          <p>
+            В отличие от привычного зодиакального гороскопа, система Мишель
+            Бернхардт выделяет <strong>366 уникальных оттенков Pantone</strong>{" "}
+            — для каждого дня в году, включая 29 февраля, а также 12 управляющих
+            цветов для каждого месяца.
+          </p>
+          <p>
+            Ваш личный цвет Пантон вычисляется на основе солнечного знака,
+            правящей планеты и нумерологии вашей даты рождения. Этот цвет — не
+            обязательно ваш любимый оттенок. Это энергетический маркер, который
+            отражает ваши скрытые таланты, сильные стороны и истинную природу.
+          </p>
+          <h3 className="text-2xl font-bold font-serif text-gray-900 mt-8 mb-4">
+            Как использовать свой цвет Pantone?
+          </h3>
+          <ul>
+            <li>
+              <strong>Для привлечения удачи:</strong> Носите аксессуары своего
+              цвета в важные дни.
+            </li>
+            <li>
+              <strong>В интерьере:</strong> Окружите себя своим цветом рождения
+              дома или на рабочем месте, чтобы чувствовать себя увереннее и
+              снизить стресс.
+            </li>
+            <li>
+              <strong>Для медитации:</strong> Визуализируйте свой оттенок, когда
+              вам нужно восстановить душевный баланс.
+            </li>
+          </ul>
+          <p>
+            Выберите месяц и день своего рождения в календаре выше, чтобы узнать
+            свой личный номер Pantone, название цвета и подробный
+            психологический профиль личности!
+          </p>
+        </article>
       </div>
     </main>
   );

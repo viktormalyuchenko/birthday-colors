@@ -274,6 +274,49 @@ export default async function ColorPage({
             feature={colorInfo.ru_feature}
           />
         </div>
+        {/* БЛОК ПЕРЕЛИНКОВКИ ДЛЯ SEO */}
+        <div
+          className="mt-16 pt-12 text-center"
+          style={{ borderTop: `1px solid ${borderColor}` }}
+        >
+          <h3
+            className="text-2xl font-bold font-serif mb-8"
+            style={{ color: textColor }}
+          >
+            Узнайте больше о своей дате
+          </h3>
+          <div className="flex flex-col md:flex-row justify-center gap-6">
+            <Link
+              href={`/pantone/${colorInfo.date_mmdd}`}
+              className="px-8 py-5 rounded-2xl backdrop-blur-md transition-transform hover:-translate-y-1"
+              style={{
+                backgroundColor: glassBgColor,
+                border: `1px solid ${borderColor}`,
+                color: textColor,
+              }}
+            >
+              <span className="block text-xs uppercase tracking-widest opacity-60 mb-1">
+                Colorstrology
+              </span>
+              <span className="font-bold text-lg">Ваш цвет по Pantone →</span>
+            </Link>
+
+            <Link
+              href="/numerology"
+              className="px-8 py-5 rounded-2xl backdrop-blur-md transition-transform hover:-translate-y-1"
+              style={{
+                backgroundColor: glassBgColor,
+                border: `1px solid ${borderColor}`,
+                color: textColor,
+              }}
+            >
+              <span className="block text-xs uppercase tracking-widest opacity-60 mb-1">
+                Пифагор
+              </span>
+              <span className="font-bold text-lg">Ваше Число Судьбы →</span>
+            </Link>
+          </div>
+        </div>
       </div>
     </main>
   );
