@@ -110,7 +110,7 @@ export async function GET(request: Request) {
             {keywords}
           </p>
           <div style={{ display: "flex", fontSize: 32, fontWeight: 800 }}>
-            Colorstrology.viktoor.ru
+            Colorstrology.ru
           </div>
         </div>
       </div>

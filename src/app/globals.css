@@ -15,3 +15,58 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+/* СТИЛИ ДЛЯ ТАБЛИЦ В БЛОГЕ */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  font-size: 0.95rem; /* Чуть мельче основного текста для аккуратности */
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.prose thead {
+  background-color: #f3f4f6; /* Светло-серый фон для шапки */
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.prose th {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-weight: 700;
+  color: #111827;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+}
+
+.prose tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s ease;
+}
+
+.prose tbody tr:last-child {
+  border-bottom: none;
+}
+
+.prose tbody tr:hover {
+  background-color: #f9fafb; /* Легкая подсветка при наведении */
+}
+
+.prose td {
+  padding: 1rem 1.5rem;
+  color: #4b5563;
+  vertical-align: top; /* Чтобы текст в ячейках выравнивался по верху */
+}
+
+/* На мобильных устройствах таблица должна скроллиться по горизонтали */
+.prose .table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}

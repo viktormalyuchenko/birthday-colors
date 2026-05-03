@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     const title = searchParams.get("title") || "Цвет дня";
     const hex = searchParams.get("hex") || "cccccc"; // Получаем hex БЕЗ решетки
     const subtitle = searchParams.get("subtitle") || "Colorstrology";
-    const system = searchParams.get("system") || "colorstrology.viktoor.ru";
+    const system = searchParams.get("system") || "colorstrology.ru";
 
     // Вычисляем контрастный цвет текста
     const r = parseInt(hex.substring(0, 2), 16);

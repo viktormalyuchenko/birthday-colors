@@ -72,11 +72,12 @@ export default async function PostPage({
           </div>
 
           {/* Контент статьи */}
-          <div
-            // prose-xl делает шрифт крупнее и приятнее для чтения с экрана ПК
-            className="prose prose-lg md:prose-xl prose-indigo max-w-none text-gray-700 prose-headings:font-serif prose-headings:text-gray-900 prose-a:text-indigo-600 hover:prose-a:text-indigo-500 prose-img:rounded-3xl prose-img:shadow-md"
-            dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
-          />
+          <div className="overflow-x-auto w-full pb-4">
+            <div
+              className="prose prose-lg md:prose-xl prose-indigo min-w-full text-gray-700 prose-headings:font-serif prose-headings:text-gray-900 prose-a:text-indigo-600 hover:prose-a:text-indigo-500 prose-img:rounded-3xl prose-img:shadow-md"
+              dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
+            />
+          </div>
         </article>
         {/* Кнопка возврата в самом низу статьи для удобства */}
         <div className="mt-12 text-center">
