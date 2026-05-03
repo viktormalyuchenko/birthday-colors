@@ -176,11 +176,41 @@ export default function Home() {
             </span>
           </Link>
 
+          <Link
+            href="/luscher-test"
+            className="group rounded-[2.5rem] bg-emerald-50 p-10 md:p-12 flex flex-col justify-between min-h-[400px] shadow-sm hover:shadow-xl hover:bg-emerald-100 transition-all border border-emerald-100/50 relative overflow-hidden"
+          >
+            {/* Маленькие цветные кружочки Люшера для декора */}
+            <div className="absolute top-10 right-10 flex gap-1 opacity-60">
+              <div className="w-4 h-4 rounded-full bg-[#1C3B70]"></div>
+              <div className="w-4 h-4 rounded-full bg-[#EED244]"></div>
+              <div className="w-4 h-4 rounded-full bg-[#C23531]"></div>
+            </div>
+
+            <div>
+              <div className="w-14 h-14 bg-emerald-600 text-white rounded-full flex items-center justify-center text-2xl mb-6">
+                👁
+              </div>
+              <h2 className="text-3xl font-serif font-bold mb-4 text-gray-900">
+                Тест
+                <br />
+                Люшера
+              </h2>
+              <p className="text-gray-600 leading-relaxed">
+                Глубокий психологический анализ. Выберите цвета и узнайте свои
+                истинные цели, скрытые тревоги и уровень стресса.
+              </p>
+            </div>
+            <span className="text-emerald-600 font-bold uppercase tracking-wider text-sm mt-8 group-hover:translate-x-2 transition-transform inline-block">
+              Пройти тест →
+            </span>
+          </Link>
+
           {/* РЯД 4 ------------------------------------------------ */}
           {/* 7. Совместимость по Японским цветам (3 колонки - НА ВСЮ ШИРИНУ ВНИЗУ) */}
           <Link
             href="/color-compatibility"
-            className="md:col-span-3 group relative overflow-hidden rounded-[2.5rem] bg-indigo-50 p-8 md:p-14 flex flex-col justify-end min-h-[400px] shadow-sm hover:shadow-xl hover:bg-indigo-100 transition-all border border-indigo-100/50"
+            className="md:col-span-2 group relative overflow-hidden rounded-[2.5rem] bg-indigo-50 p-8 md:p-14 flex flex-col justify-end min-h-[400px] shadow-sm hover:shadow-xl hover:bg-indigo-100 transition-all border border-indigo-100/50"
           >
             {/* Декоративные круги */}
             <div className="absolute top-10 right-10 flex -space-x-8 opacity-60 group-hover:scale-110 transition-transform">
