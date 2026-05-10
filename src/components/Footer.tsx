@@ -108,8 +108,11 @@ export default function Footer() {
           </h4>
           <ul className="flex flex-col gap-4 text-sm">
             <li>
-              <Link href="/blog" className="hover:text-white transition-colors">
-                Блог и статьи
+              <Link
+                href="/horoscopes"
+                className="hover:text-white transition-colors"
+              >
+                Гороскопы и Таро
               </Link>
             </li>
             <li>

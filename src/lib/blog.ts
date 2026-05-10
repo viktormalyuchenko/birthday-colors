@@ -2,10 +2,13 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
-import html from "remark-html";
-import remarkGfm from "remark-gfm"; // <-- НОВЫЙ ИМПОРТ
+import remarkGfm from "remark-gfm";
+import remarkToc from "remark-toc";
+import remarkRehype from "remark-rehype";
+import rehypeSlug from "rehype-slug";
+import rehypeStringify from "rehype-stringify";
 
-const postsDirectory = path.join(process.cwd(), "content/blog");
+const postsDirectory = path.join(process.cwd(), "content/horoscopes");
 
 export function getSortedPostsData() {
   if (!fs.existsSync(postsDirectory)) return [];
@@ -25,6 +28,10 @@ export function getSortedPostsData() {
           excerpt: string;
           category: string;
           coverImage: string;
+          forecast_type?: string;
+          date_start?: string;
+          date_end?: string;
+          toc?: boolean;
         }),
       };
     });
@@ -36,10 +43,17 @@ export async function getPostData(slug: string) {
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const matterResult = matter(fileContents);
 
-  // <-- ИСПОЛЬЗУЕМ ПЛАГИН ЗДЕСЬ
+  // Новая цепочка обработки: добавляет оглавление и ID к заголовкам
   const processedContent = await remark()
-    .use(remarkGfm) // Добавляем поддержку таблиц
-    .use(html, { sanitize: false }) // Разрешаем рендерить таблицы
+    .use(remarkGfm)
+    .use(remarkToc, {
+      heading: "Оглавление|Содержание",
+      tight: true,
+      maxDepth: 2,
+    }) // Ищет заголовок "Оглавление"
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeSlug) // Добавляет id="zogolovok" для ссылок
+    .use(rehypeStringify, { allowDangerousHtml: true })
     .process(matterResult.content);
 
   const contentHtml = processedContent.toString();
@@ -47,12 +61,6 @@ export async function getPostData(slug: string) {
   return {
     slug,
     contentHtml,
-    ...(matterResult.data as {
-      date: string;
-      title: string;
-      excerpt: string;
-      category: string;
-      coverImage: string;
-    }),
+    ...(matterResult.data as any),
   };
 }

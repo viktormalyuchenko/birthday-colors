@@ -158,10 +158,10 @@ export default function Header() {
             </div>
 
             <Link
-              href="/blog"
+              href="/horoscopes"
               className="flex justify-center items-center py-4 bg-gray-900 text-white rounded-2xl font-bold uppercase tracking-widest text-sm shadow-xl active:scale-95 transition-transform"
             >
-              Читать Блог →
+              Таро и Гороскопы
             </Link>
           </div>
         </div>
@@ -251,8 +251,11 @@ export default function Header() {
             </div>
           </div>
 
-          <Link href="/blog" className="hover:text-gray-900 transition-colors">
-            Блог
+          <Link
+            href="/horoscopes"
+            className="hover:text-gray-900 transition-colors"
+          >
+            Гороскопы
           </Link>
         </nav>
 
