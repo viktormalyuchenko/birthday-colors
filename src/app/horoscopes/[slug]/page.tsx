@@ -1,7 +1,37 @@
-import { getPostData } from "@/lib/blog";
+import { getPostData, getSortedPostsData } from "@/lib/blog"; // Добавили getSortedPostsData
 import { notFound } from "next/navigation";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import Link from "next/link";
 import type { Metadata } from "next";
+
+// --- АСТРОЛОГИЧЕСКИЙ СЛОВАРЬ (Связывает стихии и знаки) ---
+const ASTRO_MAP: Record<string, string[]> = {
+  "огненные знаки": ["овен", "лев", "стрелец"],
+  "водные знаки": ["рак", "скорпион", "рыбы"],
+  "земные знаки": ["телец", "дева", "козерог"],
+  "воздушные знаки": ["близнецы", "весы", "водолей"],
+};
+
+// Функция для "расширения" тегов
+// Если тег "Рыбы", она добавит "Водные знаки". Если "Водные знаки", добавит "Рак", "Скорпион", "Рыбы"
+function expandTags(tags: string[] = []): string[] {
+  const expanded = new Set<string>();
+  const lowerTags = tags.map((t) => t.toLowerCase());
+
+  lowerTags.forEach((tag) => {
+    expanded.add(tag);
+    // Проверяем, это ли название стихии?
+    if (ASTRO_MAP[tag]) {
+      ASTRO_MAP[tag].forEach((sign) => expanded.add(sign));
+    }
+    // Проверяем, это ли название знака?
+    Object.entries(ASTRO_MAP).forEach(([element, signs]) => {
+      if (signs.includes(tag)) expanded.add(element);
+    });
+  });
+
+  return Array.from(expanded);
+}
 
 export async function generateMetadata({
   params,
@@ -39,24 +69,21 @@ export default async function PostPage({
     notFound();
   }
 
-  // --- ЛОГИКА АКТУАЛЬНОСТИ ПРОГНОЗА ---
+  // --- ЛОГИКА АКТУАЛЬНОСТИ ТЕКУЩЕЙ СТАТЬИ ---
   let statusBadge = null;
   let dateRangeText = null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   if (
     postData.date_start &&
     postData.date_end &&
     postData.forecast_type !== "general"
   ) {
-    const today = new Date();
-    // Обнуляем время у today для корректного сравнения дат
-    today.setHours(0, 0, 0, 0);
-
     const startDate = new Date(postData.date_start);
     const endDate = new Date(postData.date_end);
-    endDate.setHours(23, 59, 59, 999); // Прогноз действует до конца последнего дня
+    endDate.setHours(23, 59, 59, 999);
 
-    // Форматируем для вывода (например: "10 мая - 16 мая")
     const formatOpts: Intl.DateTimeFormatOptions = {
       day: "numeric",
       month: "long",
@@ -80,26 +107,46 @@ export default async function PostPage({
           Архивный прогноз
         </div>
       );
-    } else if (today < startDate) {
-      statusBadge = (
-        <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-600 px-4 py-2 rounded-full text-sm font-bold shadow-sm">
-          <span className="w-3 h-3 rounded-full bg-blue-500"></span>
-          Скоро начнется
-        </div>
-      );
     }
   }
+
+  // --- ЛОГИКА ПОДБОРА ПОХОЖИХ СТАТЕЙ ---
+  const allPosts = getSortedPostsData();
+  const currentExpandedTags = expandTags(postData.tags || []);
+
+  const relatedPosts = allPosts
+    .filter((post) => post.slug !== postData.slug) // Убираем текущую статью
+    .filter((post) => {
+      // Оставляем только те, которые актуальны по дате
+      if (!post.date_start || !post.date_end) return false;
+      const start = new Date(post.date_start);
+      const end = new Date(post.date_end);
+      end.setHours(23, 59, 59, 999);
+      return today >= start && today <= end;
+    })
+    .map((post) => {
+      // Считаем "вес" совпадения
+      const postExpandedTags = expandTags(post.tags || []);
+      const matchCount = postExpandedTags.filter((tag) =>
+        currentExpandedTags.includes(tag),
+      ).length;
+      return { ...post, matchCount };
+    })
+    // Оставляем только те, где есть совпадения, сортируем по убыванию совпадений
+    .filter((post) => post.matchCount > 0)
+    .sort((a, b) => b.matchCount - a.matchCount)
+    .slice(0, 3); // Берем топ-3
 
   return (
     <main className="min-h-screen bg-[#F9F9F8] py-10 md:py-16 px-4 font-sans">
       <div className="max-w-5xl mx-auto">
-        {" "}
         <Breadcrumbs
           items={[
             { label: "Гороскопы", href: "/horoscopes" },
             { label: postData.title },
           ]}
         />
+
         <article className="bg-white p-6 md:p-12 lg:p-16 rounded-[2rem] md:rounded-[3rem] shadow-xl border border-gray-100 mt-4">
           <header className="mb-8 md:mb-12 text-center max-w-4xl mx-auto flex flex-col items-center">
             <div className="flex flex-wrap justify-center gap-3 mb-4">
@@ -109,7 +156,6 @@ export default async function PostPage({
               {statusBadge}
             </div>
 
-            {/* Уменьшили размер текста на ПК с 6xl до 5xl, чтобы не занимал пол-экрана */}
             <h1 className="text-3xl md:text-5xl font-black text-gray-900 mb-6 font-serif leading-tight">
               {postData.title}
             </h1>
@@ -124,7 +170,6 @@ export default async function PostPage({
             </div>
           </header>
 
-          {/* Уменьшили высоту картинки на ПК (с 500px до 350px), чтобы текст сразу был виден */}
           <div className="w-full h-56 md:h-[350px] rounded-2xl md:rounded-3xl overflow-hidden mb-12 shadow-md relative">
             <img
               src={
@@ -137,7 +182,6 @@ export default async function PostPage({
           </div>
 
           <div className="flex flex-col md:flex-row gap-12">
-            {/* Основной текст статьи */}
             <div className="flex-grow overflow-x-auto pb-4">
               <div
                 className="prose prose-base md:prose-lg prose-indigo min-w-full text-gray-700 prose-headings:font-serif prose-headings:text-gray-900 prose-a:text-indigo-600 hover:prose-a:text-indigo-500 prose-img:rounded-2xl"
@@ -146,7 +190,45 @@ export default async function PostPage({
             </div>
           </div>
         </article>
-        <div className="mt-12 text-center">
+
+        {/* --- НОВЫЙ БЛОК: РЕКОМЕНДАЦИИ --- */}
+        {relatedPosts.length > 0 && (
+          <div className="mt-20">
+            <h3 className="text-3xl font-black font-serif text-gray-900 mb-8 text-center">
+              Актуальное для вас
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {relatedPosts.map((post) => (
+                <Link
+                  href={`/horoscopes/${post.slug}`}
+                  key={post.slug}
+                  className="group bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all flex flex-col"
+                >
+                  <div className="h-40 overflow-hidden relative">
+                    <div
+                      className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-700"
+                      style={{ backgroundImage: `url(${post.coverImage})` }}
+                    />
+                  </div>
+                  <div className="p-6 flex flex-col flex-grow">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 mb-2">
+                      🟢 Идет сейчас
+                    </span>
+                    <h4 className="text-xl font-bold font-serif text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors line-clamp-2">
+                      {post.title}
+                    </h4>
+                    <p className="text-sm text-gray-500 line-clamp-2 mt-auto">
+                      {post.excerpt}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Кнопка назад */}
+        <div className="mt-16 text-center">
           <a
             href="/horoscopes"
             className="inline-block px-8 py-4 bg-gray-900 text-white font-bold rounded-full hover:bg-indigo-600 transition-colors shadow-lg active:scale-95"

@@ -27,6 +27,7 @@ export function getSortedPostsData() {
           title: string;
           excerpt: string;
           category: string;
+          tags?: string[];
           coverImage: string;
           forecast_type?: string;
           date_start?: string;
