@@ -301,12 +301,12 @@ export default function MoonPhaseTrend() {
                   <h2 className="text-7xl font-black font-serif mb-4 drop-shadow-md text-indigo-100">
                     {compatibility}%
                   </h2>
-                  <button
+                  {/* <button
                     onClick={() => setShowTiktokStudio(true)}
                     className="mt-6 bg-white text-black px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition flex items-center gap-3 mx-auto"
                   >
                     <span>📱</span> Снять для TikTok
-                  </button>
+                  </button> */}
                 </div>
               </div>
             )}

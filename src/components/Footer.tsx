@@ -129,9 +129,12 @@ export default function Footer() {
         <p>
           © {new Date().getFullYear()} Colorstrology Portal. Все права защищены.
         </p>
-        <p className="mt-4 md:mt-0 opacity-60">
-          Сделано с любовью к цвету и астрологии.
-        </p>
+        <div className="flex gap-4 mt-4 md:mt-0 opacity-60">
+          <Link href="/privacy" className="hover:text-white transition-colors">
+            Политика конфиденциальности
+          </Link>
+          <span>Сделано с любовью к цвету.</span>
+        </div>
       </div>
     </footer>
   );

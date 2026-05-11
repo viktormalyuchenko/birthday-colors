@@ -24,6 +24,11 @@ export default function ShareModal({
   const [copied, setCopied] = useState(false);
   const [url, setUrl] = useState("");
   const [isMounted, setIsMounted] = useState(false);
+
+  // Состояние для готовой картинки
+  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -37,7 +42,9 @@ export default function ShareModal({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleDownloadImage = () => {
+  // 1. Функция только ГЕНЕРИРУЕТ картинку, но НЕ скачивает её скрыто
+  const generateImage = async () => {
+    setIsGenerating(true);
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -46,18 +53,15 @@ export default function ShareModal({
     const width = 1080;
     const height = 1920;
 
-    // 1. Рисуем фон
     ctx.fillStyle = colorHex || "#ffffff";
     ctx.fillRect(0, 0, width, height);
 
     ctx.fillStyle = textColor;
     ctx.textAlign = "center";
 
-    // 2. Рисуем дату
     ctx.font = "300 60px sans-serif";
     ctx.fillText(dateText.toUpperCase(), width / 2, 450);
 
-    // 3. Рисуем название цвета (с автоуменьшением шрифта для длинных слов)
     let fontSize = 160;
     ctx.font = `bold ${fontSize}px sans-serif`;
     while (ctx.measureText(colorName).width > width - 100 && fontSize > 60) {
@@ -66,13 +70,10 @@ export default function ShareModal({
     }
     ctx.fillText(colorName, width / 2, 650);
 
-    // 4. Английское название
     ctx.font = "italic 60px serif";
     ctx.fillText(colorEnName, width / 2, 770);
 
-    // 5. Характеристика (Перенос по строкам ПРАВИЛЬНО, с едиными кавычками)
-    const fullText = `"${feature}"`; // Оборачиваем ВСЮ фразу в кавычки ОДИН раз
-    const words = fullText.split(" ");
+    const words = feature.split(" ");
     let line = "";
     let y = 1050;
     const lineHeight = 70;
@@ -81,36 +82,47 @@ export default function ShareModal({
     for (let i = 0; i < words.length; i++) {
       const testLine = line + words[i] + " ";
       const metrics = ctx.measureText(testLine);
-
-      // Если строка слишком длинная и это не первое слово
       if (metrics.width > width - 160 && i > 0) {
-        ctx.fillText(line.trim(), width / 2, y); // Рисуем готовую строку БЕЗ добавления кавычек
-        line = words[i] + " "; // Начинаем новую строку
+        ctx.fillText(line.trim(), width / 2, y);
+        line = words[i] + " ";
         y += lineHeight;
       } else {
         line = testLine;
       }
     }
-    // Дописываем последнюю строку (здесь будет закрывающая кавычка)
     ctx.fillText(line.trim(), width / 2, y);
 
-    // 6. Брендинг (Логотип + Поддомен)
     ctx.font = "bold 50px serif";
     ctx.fillText("Colorstrology.", width / 2, 1700);
-
     ctx.font = "30px sans-serif";
-    ctx.globalAlpha = 0.7; // Полупрозрачность для ссылки
+    ctx.globalAlpha = 0.7;
     ctx.fillText("colorstrology.ru", width / 2, 1760);
     ctx.globalAlpha = 1.0;
 
-    // 7. Скачиваем
-    const link = document.createElement("a");
-    link.download = `${dateText.replace(" ", "_")}_colorstrology.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
+    // Сохраняем картинку в state
+    const dataUrl = canvas.toDataURL("image/png");
+    setGeneratedImage(dataUrl);
+    setIsGenerating(false);
+
+    // 2. Безопасный вызов Native Share API (если поддерживается телефоном)
+    if (navigator.share) {
+      try {
+        // Конвертируем DataURL в File для мобильного шаринга
+        const res = await fetch(dataUrl);
+        const blob = await res.blob();
+        const file = new File([blob], "my-color.png", { type: "image/png" });
+
+        await navigator.share({
+          title: "Мой цвет рождения",
+          text: `Мой цвет: ${colorName}! Узнай свой на Colorstrology.ru`,
+          files: [file], // Отправляем картинку прямо в меню телефона!
+        });
+      } catch (err) {
+        console.log("Шаринг отменен или не поддерживается");
+      }
+    }
   };
 
-  // Портал для рендера вне корневого блока
   const renderModal = () => {
     if (!isOpen || !isMounted) return null;
 
@@ -120,7 +132,7 @@ export default function ShareModal({
         onPointerDown={() => setIsOpen(false)}
       >
         <div
-          className="bg-[#212121] text-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl transform transition-transform animate-in slide-in-from-bottom-8 sm:slide-in-from-bottom-0 sm:zoom-in-95"
+          className="bg-[#212121] text-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl transform transition-transform"
           onPointerDown={(e) => e.stopPropagation()}
         >
           <div className="flex justify-between items-center mb-6">
@@ -134,36 +146,74 @@ export default function ShareModal({
           </div>
 
           <div className="flex gap-6 mb-8 overflow-x-auto hide-scrollbar pb-2 pt-2">
-            {/* Иконка Stories */}
-            <button
-              onClick={handleDownloadImage}
-              className="flex flex-col items-center gap-3 group shrink-0"
-            >
-              <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center group-hover:scale-105 transition-transform">
-                <svg
-                  width="28"
-                  height="28"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+            {/* БЕЗОПАСНАЯ КНОПКА ГЕНЕРАЦИИ (БЕЗ СКРЫТОГО СКАЧИВАНИЯ) */}
+            <div className="flex flex-col items-center gap-3 shrink-0">
+              {generatedImage && !navigator.share ? (
+                // Если сгенерировали, но Native Share не работает (например на ПК) - показываем НАСТОЯЩУЮ ссылку <a>
+                <a
+                  href={generatedImage}
+                  download={`${dateText.replace(" ", "_")}_colorstrology.png`}
+                  className="w-16 h-16 rounded-full bg-emerald-500 flex items-center justify-center hover:scale-105 transition-transform"
                 >
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                </svg>
-              </div>
-              <span className="text-xs text-gray-300 font-medium">Stories</span>
-            </button>
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                </a>
+              ) : (
+                <button
+                  onClick={generateImage}
+                  disabled={isGenerating}
+                  className="w-16 h-16 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center group-hover:scale-105 transition-transform disabled:opacity-50"
+                >
+                  {isGenerating ? (
+                    "⏳"
+                  ) : (
+                    <svg
+                      width="28"
+                      height="28"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <rect
+                        x="2"
+                        y="2"
+                        width="20"
+                        height="20"
+                        rx="5"
+                        ry="5"
+                      ></rect>
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                  )}
+                </button>
+              )}
+              <span className="text-xs text-gray-300 font-medium">
+                {generatedImage && !navigator.share ? "Скачать" : "Stories"}
+              </span>
+            </div>
 
-            {/* Иконка Telegram */}
+            {/* Оставляем Telegram и VK ссылки без изменений */}
             <a
               href={`https://t.me/share/url?url=${url}&text=Узнал свой цвет рождения на Colorstrology!`}
               target="_blank"
               rel="noreferrer"
-              className="flex flex-col items-center gap-3 group shrink-0"
+              className="flex flex-col items-center gap-3 shrink-0 group"
             >
               <div className="w-16 h-16 rounded-full bg-[#0088cc] flex items-center justify-center group-hover:scale-105 transition-transform">
                 <svg width="30" height="30" viewBox="0 0 24 24" fill="white">
@@ -175,12 +225,11 @@ export default function ShareModal({
               </span>
             </a>
 
-            {/* Иконка VK (ИСПРАВЛЕННАЯ) */}
             <a
               href={`https://vk.com/share.php?url=${url}`}
               target="_blank"
               rel="noreferrer"
-              className="flex flex-col items-center gap-3 group shrink-0"
+              className="flex flex-col items-center gap-3 shrink-0 group"
             >
               <div className="w-16 h-16 rounded-full bg-[#0077FF] flex items-center justify-center group-hover:scale-105 transition-transform">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
@@ -222,14 +271,12 @@ export default function ShareModal({
       >
         Поделиться
       </button>
-
       <canvas
         ref={canvasRef}
         width="1080"
         height="1920"
         style={{ display: "none" }}
       ></canvas>
-
       {renderModal()}
     </>
   );
