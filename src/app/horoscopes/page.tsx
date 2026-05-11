@@ -41,7 +41,14 @@ export default function HoroscopesIndex() {
                 <div
                   className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700"
                   style={{
-                    backgroundImage: `url(${post.coverImage || "https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=1000"})`,
+                    backgroundImage: `url(${
+                      post.coverImage
+                        ? post.coverImage.includes("unsplash.com") &&
+                          !post.coverImage.includes("w=")
+                          ? `${post.coverImage}${post.coverImage.includes("?") ? "&" : "?"}w=600&q=80&auto=format&fit=crop`
+                          : post.coverImage
+                        : "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&q=80&auto=format&fit=crop"
+                    })`,
                   }}
                 />
               </div>

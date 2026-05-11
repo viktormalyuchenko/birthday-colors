@@ -110,14 +110,20 @@ export default async function PostPage({
     }
   }
 
-  // --- ЛОГИКА ПОДБОРА ПОХОЖИХ СТАТЕЙ ---
+  // --- ЛОГИКА ПОДБОРА ПОХОЖИХ СТАТЕЙ (С УМНЫМ ВЕСОМ) ---
   const allPosts = getSortedPostsData();
   const currentExpandedTags = expandTags(postData.tags || []);
 
+  // Все знаки и стихии для проверки веса
+  const allAstroKeywords = [
+    ...Object.keys(ASTRO_MAP),
+    ...Object.values(ASTRO_MAP).flat(),
+  ];
+
   const relatedPosts = allPosts
-    .filter((post) => post.slug !== postData.slug) // Убираем текущую статью
+    .filter((post) => post.slug !== postData.slug) // Убираем текущую
     .filter((post) => {
-      // Оставляем только те, которые актуальны по дате
+      // Оставляем только актуальные
       if (!post.date_start || !post.date_end) return false;
       const start = new Date(post.date_start);
       const end = new Date(post.date_end);
@@ -125,17 +131,38 @@ export default async function PostPage({
       return today >= start && today <= end;
     })
     .map((post) => {
-      // Считаем "вес" совпадения
       const postExpandedTags = expandTags(post.tags || []);
-      const matchCount = postExpandedTags.filter((tag) =>
-        currentExpandedTags.includes(tag),
-      ).length;
-      return { ...post, matchCount };
+
+      // Считаем вес совпадений
+      const matchScore = postExpandedTags.reduce((score, tag) => {
+        if (currentExpandedTags.includes(tag)) {
+          // Если совпал знак зодиака или стихия — даем 10 баллов!
+          if (allAstroKeywords.includes(tag)) return score + 10;
+          // Если совпало просто слово "Любовь" или "Май" — даем 1 балл
+          return score + 1;
+        }
+        return score;
+      }, 0);
+
+      return { ...post, matchScore };
     })
-    // Оставляем только те, где есть совпадения, сортируем по убыванию совпадений
-    .filter((post) => post.matchCount > 0)
-    .sort((a, b) => b.matchCount - a.matchCount)
-    .slice(0, 3); // Берем топ-3
+    .filter((post) => post.matchScore > 0)
+    .sort((a, b) => b.matchScore - a.matchScore) // Сортируем по баллам
+    .slice(0, 3);
+
+  let optimizedCover =
+    postData.coverImage ||
+    "https://images.unsplash.com/photo-1506744038136-46273834b3fb";
+
+  // Если это картинка с Unsplash и в ней еще нет параметра ширины (w=)
+  if (
+    optimizedCover.includes("unsplash.com") &&
+    !optimizedCover.includes("w=")
+  ) {
+    optimizedCover = optimizedCover.includes("?")
+      ? `${optimizedCover}&w=1200&q=80&auto=format&fit=crop`
+      : `${optimizedCover}?w=1200&q=80&auto=format&fit=crop`;
+  }
 
   return (
     <main className="min-h-screen bg-[#F9F9F8] py-10 md:py-16 px-4 font-sans">
@@ -172,12 +199,10 @@ export default async function PostPage({
 
           <div className="w-full h-56 md:h-[350px] rounded-2xl md:rounded-3xl overflow-hidden mb-12 shadow-md relative">
             <img
-              src={
-                postData.coverImage ||
-                "https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=1000"
-              }
+              src={optimizedCover}
               alt={postData.title}
               className="w-full h-full object-cover"
+              loading="lazy"
             />
           </div>
 
