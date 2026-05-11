@@ -119,13 +119,7 @@ export default function ShareModal({
     <>
       <button
         type="button"
-        onClick={() => {
-          setIsOpen(true);
-          alert(
-            "Скоро мы научимся генерировать красивую картинку для цвета: " +
-              colorName,
-          );
-        }}
+        onClick={() => setIsOpen(true)}
         className="mt-6 md:mt-0 px-8 py-4 rounded-full font-bold shadow-lg flex-shrink-0 transition-transform active:scale-95 cursor-pointer"
         style={{ backgroundColor: textColor, color: colorHex }}
       >
