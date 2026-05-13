@@ -13,6 +13,13 @@ const nextConfig = {
         destination: "/horoscopes/:slug*",
         permanent: true,
       },
+      {
+        source:
+          "/horoscopes/taro-prognoz-na-may-2026-dlya-dev-lyubov-dengi-i-peremeny",
+        destination:
+          "/horoscopes/taro-prognoz-na-may-2026-dlya-vodoleev-lyubov-dengi-i-peremeny",
+        permanent: true,
+      },
     ];
   },
 };
