@@ -109,16 +109,27 @@ export default function Footer() {
           <ul className="flex flex-col gap-4 text-sm">
             <li>
               <Link
-                href="/horoscopes"
+                href="/about"
                 className="hover:text-white transition-colors"
               >
-                Гороскопы и Таро
+                О проекте
               </Link>
             </li>
             <li>
-              <Link href="/" className="hover:text-white transition-colors">
-                На главную
+              <Link
+                href="/horoscopes"
+                className="hover:text-white transition-colors"
+              >
+                Гороскопы и статьи
               </Link>
+            </li>
+            <li>
+              <a
+                href="mailto:hello@viktoor.ru"
+                className="hover:text-white transition-colors"
+              >
+                Контакты
+              </a>
             </li>
           </ul>
         </div>
@@ -129,11 +140,13 @@ export default function Footer() {
         <p>
           © {new Date().getFullYear()} Colorstrology Portal. Все права защищены.
         </p>
-        <div className="flex gap-4 mt-4 md:mt-0 opacity-60">
+        <div className="flex gap-6 mt-4 md:mt-0 opacity-60">
           <Link href="/privacy" className="hover:text-white transition-colors">
             Политика конфиденциальности
           </Link>
-          <span>Сделано с любовью к цвету.</span>
+          <Link href="/terms" className="hover:text-white transition-colors">
+            Условия использования
+          </Link>
         </div>
       </div>
     </footer>
