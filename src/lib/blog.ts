@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
+import html from "remark-html";
 import remarkGfm from "remark-gfm";
 import remarkToc from "remark-toc";
 import remarkRehype from "remark-rehype";
@@ -10,50 +11,68 @@ import rehypeStringify from "rehype-stringify";
 
 const postsDirectory = path.join(process.cwd(), "content/horoscopes");
 
+// Рекурсивная функция: заходит во все вложенные папки и собирает пути к .md файлам
+function getAllFiles(dirPath: string, arrayOfFiles: string[] = []) {
+  if (!fs.existsSync(dirPath)) return arrayOfFiles;
+
+  const files = fs.readdirSync(dirPath);
+
+  files.forEach((file) => {
+    const fullPath = path.join(dirPath, file);
+    if (fs.statSync(fullPath).isDirectory()) {
+      arrayOfFiles = getAllFiles(fullPath, arrayOfFiles);
+    } else if (file.endsWith(".md")) {
+      arrayOfFiles.push(fullPath);
+    }
+  });
+
+  return arrayOfFiles;
+}
+
 export function getSortedPostsData() {
-  if (!fs.existsSync(postsDirectory)) return [];
-  const fileNames = fs.readdirSync(postsDirectory);
-  const allPostsData = fileNames
-    .filter((name) => name.endsWith(".md"))
-    .map((fileName) => {
-      const slug = fileName.replace(/\.md$/, "");
-      const fullPath = path.join(postsDirectory, fileName);
-      const fileContents = fs.readFileSync(fullPath, "utf8");
-      const matterResult = matter(fileContents);
-      return {
-        slug,
-        ...(matterResult.data as {
-          date: string;
-          title: string;
-          excerpt: string;
-          category: string;
-          tags?: string[];
-          coverImage: string;
-          forecast_type?: string;
-          date_start?: string;
-          date_end?: string;
-          toc?: boolean;
-        }),
-      };
-    });
+  const allFiles = getAllFiles(postsDirectory);
+
+  const allPostsData = allFiles.map((fullPath) => {
+    // Имя файла становится слагом (URL-ом), независимо от того, в какой он папке
+    const fileName = path.basename(fullPath);
+    const slug = fileName.replace(/\.md$/, "");
+
+    const fileContents = fs.readFileSync(fullPath, "utf8");
+    const matterResult = matter(fileContents);
+
+    return {
+      slug,
+      ...(matterResult.data as any),
+    };
+  });
+
   return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
 export async function getPostData(slug: string) {
-  const fullPath = path.join(postsDirectory, `${slug}.md`);
+  const allFiles = getAllFiles(postsDirectory);
+
+  // Ищем нужный файл по его имени (slug) среди всех найденных файлов
+  const fullPath = allFiles.find(
+    (file) => path.basename(file) === `${slug}.md`,
+  );
+
+  if (!fullPath) {
+    throw new Error(`Статья ${slug} не найдена`);
+  }
+
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const matterResult = matter(fileContents);
 
-  // Новая цепочка обработки: добавляет оглавление и ID к заголовкам
   const processedContent = await remark()
     .use(remarkGfm)
     .use(remarkToc, {
       heading: "Оглавление|Содержание",
       tight: true,
       maxDepth: 2,
-    }) // Ищет заголовок "Оглавление"
+    })
     .use(remarkRehype, { allowDangerousHtml: true })
-    .use(rehypeSlug) // Добавляет id="zogolovok" для ссылок
+    .use(rehypeSlug)
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(matterResult.content);
 
