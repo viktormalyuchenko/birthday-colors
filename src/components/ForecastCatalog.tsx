@@ -32,21 +32,24 @@ const ZODIAC_SIGNS = [
 ];
 
 const GENERAL_TAGS = ["общий прогноз", "все знаки", "таро прогноз"];
-const ITEMS_PER_PAGE = 9; // Количество статей на одной странице
+const ITEMS_PER_PAGE = 9;
 
 export default function ForecastCatalog({
   initialPosts,
 }: {
   initialPosts: Post[];
 }) {
+  const [isMounted, setIsMounted] = useState(false); // Защита от Hydration Error
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [activeSign, setActiveSign] = useState<string | null>(null);
   const [onlyActive, setOnlyActive] = useState(false);
-
-  // Состояние для пагинации
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Сбрасываем пагинацию на 1 страницу при изменении любого фильтра
+  // Устанавливаем флаг монтирования
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   useEffect(() => {
     setCurrentPage(1);
   }, [activeTag, activeSign, onlyActive]);
@@ -109,7 +112,6 @@ export default function ForecastCatalog({
     return true;
   });
 
-  // Вычисляем данные для пагинации
   const totalPages = Math.ceil(filteredPosts.length / ITEMS_PER_PAGE);
   const paginatedPosts = filteredPosts.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
@@ -118,7 +120,6 @@ export default function ForecastCatalog({
 
   return (
     <div>
-      {/* ПАНЕЛЬ ФИЛЬТРОВ */}
       <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-gray-100 mb-10 flex flex-col gap-6">
         <div className="flex flex-col md:flex-row gap-6 justify-between md:items-center">
           <div className="flex items-center gap-4">
@@ -179,13 +180,13 @@ export default function ForecastCatalog({
         )}
       </div>
 
-      {/* СЕТКА СТАТЕЙ (Только для текущей страницы) */}
       {paginatedPosts.length > 0 ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {paginatedPosts.map((post) => {
               let isCurrent = false;
-              if (post.date_start && post.date_end) {
+              // Считаем актуальность ТОЛЬКО на клиенте, чтобы не бесить сервер разным временем
+              if (isMounted && post.date_start && post.date_end) {
                 const today = new Date();
                 const end = new Date(post.date_end);
                 end.setHours(23, 59, 59, 999);
@@ -244,11 +245,11 @@ export default function ForecastCatalog({
             })}
           </div>
 
-          {/* ПАГИНАЦИЯ */}
-          {totalPages > 1 && (
+          {/* ПАГИНАЦИЯ (Рендерится только на клиенте) */}
+          {isMounted && totalPages > 1 && (
             <div className="flex justify-center items-center gap-2 mt-12">
               <button
-                disabled={currentPage === 1}
+                disabled={currentPage <= 1}
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 className="px-4 py-2 rounded-xl font-bold text-sm bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
@@ -268,7 +269,7 @@ export default function ForecastCatalog({
               </div>
 
               <button
-                disabled={currentPage === totalPages}
+                disabled={currentPage >= totalPages}
                 onClick={() =>
                   setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                 }
