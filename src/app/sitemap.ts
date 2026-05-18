@@ -122,5 +122,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   });
 
+  const zodiacSigns = [
+    "aries",
+    "taurus",
+    "gemini",
+    "cancer",
+    "leo",
+    "virgo",
+    "libra",
+    "scorpio",
+    "sagittarius",
+    "capricorn",
+    "aquarius",
+    "pisces",
+  ];
+  zodiacSigns.forEach((sign) => {
+    sitemapData.push({
+      url: `${BASE_URL}/horoscopes/signs/${sign}`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.8, // Высокий приоритет, так как это хабы!
+    });
+  });
+
   return sitemapData;
 }

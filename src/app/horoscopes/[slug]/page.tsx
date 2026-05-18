@@ -253,13 +253,69 @@ export default async function PostPage({
         )}
 
         {/* Кнопка назад */}
-        <div className="mt-16 text-center">
-          <a
+        <div className="mt-16 flex flex-wrap justify-center gap-4">
+          <Link
             href="/horoscopes"
-            className="inline-block px-8 py-4 bg-gray-900 text-white font-bold rounded-full hover:bg-indigo-600 transition-colors shadow-lg active:scale-95"
+            className="px-8 py-4 bg-white border border-gray-200 text-gray-900 font-bold rounded-full hover:bg-gray-50 transition-colors shadow-sm"
           >
             ← Все прогнозы
-          </a>
+          </Link>
+
+          {/* Ищем, есть ли в тегах статьи конкретные знаки, и выводим кнопки на их хабы */}
+          {postData.tags
+            ?.filter((t: string) =>
+              Object.values(ASTRO_MAP).flat().includes(t.toLowerCase()),
+            )
+            .map((tag: string) => {
+              // Ищем английский slug (например 'aries') по русскому тегу ('овен')
+              const engSlug = Object.entries(ASTRO_MAP).find(
+                ([element, signs]) => signs.includes(tag.toLowerCase()),
+              )
+                ? Object.keys({
+                    aries: "овен",
+                    taurus: "телец",
+                    gemini: "близнецы",
+                    cancer: "рак",
+                    leo: "лев",
+                    virgo: "дева",
+                    libra: "весы",
+                    scorpio: "скорпион",
+                    sagittarius: "стрелец",
+                    capricorn: "козерог",
+                    aquarius: "водолей",
+                    pisces: "рыбы",
+                  }).find(
+                    (key) =>
+                      ({
+                        aries: "овен",
+                        taurus: "телец",
+                        gemini: "близнецы",
+                        cancer: "рак",
+                        leo: "лев",
+                        virgo: "дева",
+                        libra: "весы",
+                        scorpio: "скорпион",
+                        sagittarius: "стрелец",
+                        capricorn: "козерог",
+                        aquarius: "водолей",
+                        pisces: "рыбы",
+                      })[key as keyof typeof ASTRO_MAP] === tag.toLowerCase(),
+                  )
+                : null;
+
+              if (engSlug) {
+                return (
+                  <Link
+                    key={engSlug}
+                    href={`/horoscopes/signs/${engSlug}`}
+                    className="px-8 py-4 bg-gray-900 text-white font-bold rounded-full hover:bg-indigo-600 transition-colors shadow-lg active:scale-95"
+                  >
+                    Все гороскопы для знака {tag} →
+                  </Link>
+                );
+              }
+              return null;
+            })}
         </div>
       </div>
     </main>
