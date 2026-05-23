@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Link from "next/link";
 import type { Metadata } from "next";
+import ArticleShare from "@/components/ArticleShare";
 
 // --- АСТРОЛОГИЧЕСКИЙ СЛОВАРЬ (Связывает стихии и знаки) ---
 const ASTRO_MAP: Record<string, string[]> = {
@@ -212,6 +213,8 @@ export default async function PostPage({
                 className="prose prose-base md:prose-lg prose-indigo min-w-full text-gray-700 prose-headings:font-serif prose-headings:text-gray-900 prose-a:text-indigo-600 hover:prose-a:text-indigo-500 prose-img:rounded-2xl"
                 dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
               />
+
+              <ArticleShare title={postData.title} />
             </div>
           </div>
         </article>
