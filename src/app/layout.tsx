@@ -85,6 +85,16 @@ export default function RootLayout({
           </div>
         </noscript>
 
+        <Script
+          src="https://yandex.ru/ads/system/context.js"
+          strategy="afterInteractive"
+        />
+        <Script
+          src="https://yandex.ru/ads/system/ap-loader.js"
+          data-page-id="19646190"
+          strategy="afterInteractive"
+        />
+
         <Header />
         <div className="flex-grow">{children}</div>
         <Footer />
