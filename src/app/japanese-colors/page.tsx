@@ -89,6 +89,7 @@ export default function JapaneseColorsPage() {
                   <Link
                     href={`/${item.date_mmdd}`}
                     key={item.date_mmdd}
+                    prefetch={false}
                     className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col"
                   >
                     <div

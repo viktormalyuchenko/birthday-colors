@@ -65,6 +65,7 @@ export default function PantoneIndex() {
                 <Link
                   href={`/pantone/${item.date_mmdd}`}
                   key={item.date_mmdd}
+                  prefetch={false}
                   className="group bg-white rounded-2xl overflow-hidden shadow-sm border flex flex-col hover:shadow-lg transition-all"
                 >
                   <div
