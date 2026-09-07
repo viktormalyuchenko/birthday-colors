@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import japaneseColors from "@/data/birthday_colors.json";
+import pantoneDays from "@/data/pantone_days.json";
 import numerologyData from "@/data/numerology_colors.json";
 import moonColors from "@/data/moon_colors.json";
 import { getSortedArticlesData, getSortedPostsData } from "@/lib/blog";
@@ -92,6 +93,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     sitemapData.push({
       url: `${BASE_URL}/${color.date_mmdd}`,
       lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.6,
+    });
+  });
+
+  Object.values(pantoneDays).forEach((color) => {
+    sitemapData.push({
+      url: `${BASE_URL}/pantone/${color.date_mmdd}`,
       changeFrequency: "yearly",
       priority: 0.6,
     });

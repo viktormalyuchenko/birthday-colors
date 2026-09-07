@@ -108,7 +108,7 @@ export default async function ArticlePage({
             dangerouslySetInnerHTML={{ __html: article.contentHtml }}
           />
 
-          <ArticleShare title={article.title} />
+          <ArticleShare title={article.title} label="Поделиться статьёй:" />
         </article>
 
         {relatedArticles.length > 0 && (

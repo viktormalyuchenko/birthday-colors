@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-export default function ArticleShare({ title }: { title: string }) {
+export default function ArticleShare({ title, label = "Поделиться прогнозом:" }: { title: string; label?: string }) {
   const [url, setUrl] = useState("");
   const [copied, setCopied] = useState(false);
 
@@ -27,7 +27,7 @@ export default function ArticleShare({ title }: { title: string }) {
   const handleNativeShare = async () => {
     try {
       await navigator.share({
-        title: "Прогноз на Colorstrology",
+        title,
         text: title,
         url: url,
       });
@@ -42,7 +42,7 @@ export default function ArticleShare({ title }: { title: string }) {
   return (
     <div className="flex flex-col items-center justify-center pt-10 pb-6 border-t border-gray-100 mt-12">
       <h3 className="text-lg font-bold font-serif text-gray-900 mb-6">
-        Поделиться прогнозом:
+        {label}
       </h3>
 
       <div className="flex flex-wrap justify-center gap-4">
