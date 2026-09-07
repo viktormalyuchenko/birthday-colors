@@ -163,6 +163,12 @@ export default function Header() {
             >
               Таро и Гороскопы
             </Link>
+            <Link
+              href="/articles"
+              className="mt-3 flex items-center justify-center rounded-2xl border border-gray-200 bg-white py-4 text-sm font-bold uppercase tracking-widest text-gray-900 active:scale-95"
+            >
+              Статьи о цветах
+            </Link>
           </div>
         </div>
       </div>,
@@ -250,6 +256,13 @@ export default function Header() {
               </div>
             </div>
           </div>
+
+          <Link
+            href="/articles"
+            className="hover:text-gray-900 transition-colors"
+          >
+            Статьи
+          </Link>
 
           <Link
             href="/horoscopes"

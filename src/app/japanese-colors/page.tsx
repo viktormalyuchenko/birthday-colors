@@ -76,6 +76,64 @@ export default function JapaneseColorsPage() {
       <div className="max-w-7xl mx-auto px-4 py-12">
         <MonthNav />
 
+        <section className="mb-16 rounded-3xl border border-rose-100 bg-white p-6 shadow-sm md:p-9">
+          <div className="mb-7 flex flex-col justify-between gap-3 md:flex-row md:items-end">
+            <div>
+              <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-rose-600">
+                Полезные материалы
+              </p>
+              <h2 className="font-serif text-3xl font-black text-gray-900">
+                Как найти и использовать свой цвет
+              </h2>
+            </div>
+            <Link
+              href="/articles"
+              className="font-bold text-rose-700 hover:text-rose-500"
+            >
+              Все статьи →
+            </Link>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <Link
+              href="/articles/kak-uznat-svoy-cvet-po-date-rozhdeniya"
+              className="rounded-2xl bg-indigo-50 p-5 transition-transform hover:-translate-y-1"
+            >
+              <span className="mb-3 block h-2 w-16 rounded-full bg-indigo-500" />
+              <h3 className="font-serif text-lg font-bold text-gray-900">
+                Как узнать свой цвет по дате рождения
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-600">
+                Сравнение четырех способов расчета на сайте.
+              </p>
+            </Link>
+            <Link
+              href="/articles/cveta-dney-nedeli-tablica"
+              className="rounded-2xl bg-emerald-50 p-5 transition-transform hover:-translate-y-1"
+            >
+              <span className="mb-3 block h-2 w-16 rounded-full bg-emerald-500" />
+              <h3 className="font-serif text-lg font-bold text-gray-900">
+                Цвета дней недели
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-600">
+                Таблица оттенков с понедельника по воскресенье.
+              </p>
+            </Link>
+            <Link
+              href="/articles/kak-sostavit-lichnuyu-cvetovuyu-palitru"
+              className="rounded-2xl bg-amber-50 p-5 transition-transform hover:-translate-y-1"
+            >
+              <span className="mb-3 block h-2 w-16 rounded-full bg-amber-500" />
+              <h3 className="font-serif text-lg font-bold text-gray-900">
+                Как составить личную палитру
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-gray-600">
+                Практическая схема из результатов разных расчетов.
+              </p>
+            </Link>
+          </div>
+        </section>
+
         {/* СЕТКА МЕСЯЦЕВ */}
         {groupedByMonth.map((monthDays: any[], index: number) => (
           <section key={index} id={`month-${index}`} className="mb-20">

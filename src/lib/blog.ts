@@ -10,6 +10,7 @@ import rehypeSlug from "rehype-slug";
 import rehypeStringify from "rehype-stringify";
 
 const postsDirectory = path.join(process.cwd(), "content/horoscopes");
+const articlesDirectory = path.join(process.cwd(), "content/articles");
 
 // Рекурсивная функция: заходит во все вложенные папки и собирает пути к .md файлам
 function getAllFiles(dirPath: string, arrayOfFiles: string[] = []) {
@@ -29,8 +30,8 @@ function getAllFiles(dirPath: string, arrayOfFiles: string[] = []) {
   return arrayOfFiles;
 }
 
-export function getSortedPostsData() {
-  const allFiles = getAllFiles(postsDirectory);
+function getSortedContentData(directory: string) {
+  const allFiles = getAllFiles(directory);
 
   const allPostsData = allFiles.map((fullPath) => {
     // Имя файла становится слагом (URL-ом), независимо от того, в какой он папке
@@ -49,8 +50,16 @@ export function getSortedPostsData() {
   return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
-export async function getPostData(slug: string) {
-  const allFiles = getAllFiles(postsDirectory);
+export function getSortedPostsData() {
+  return getSortedContentData(postsDirectory);
+}
+
+export function getSortedArticlesData() {
+  return getSortedContentData(articlesDirectory);
+}
+
+async function getContentData(directory: string, slug: string) {
+  const allFiles = getAllFiles(directory);
 
   // Ищем нужный файл по его имени (slug) среди всех найденных файлов
   const fullPath = allFiles.find(
@@ -83,4 +92,12 @@ export async function getPostData(slug: string) {
     contentHtml,
     ...(matterResult.data as any),
   };
+}
+
+export async function getPostData(slug: string) {
+  return getContentData(postsDirectory, slug);
+}
+
+export async function getArticleData(slug: string) {
+  return getContentData(articlesDirectory, slug);
 }

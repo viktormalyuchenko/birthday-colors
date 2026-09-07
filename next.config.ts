@@ -20,6 +20,21 @@ const nextConfig = {
           "/horoscopes/taro-prognoz-na-may-2026-dlya-vodoleev-lyubov-dengi-i-peremeny",
         permanent: true,
       },
+      {
+        source: "/horoscopes/kak-uznat-svoy-cvet-po-date-rozhdeniya",
+        destination: "/articles/kak-uznat-svoy-cvet-po-date-rozhdeniya",
+        permanent: true,
+      },
+      {
+        source: "/horoscopes/cveta-dney-nedeli-tablica",
+        destination: "/articles/cveta-dney-nedeli-tablica",
+        permanent: true,
+      },
+      {
+        source: "/horoscopes/kak-sostavit-lichnuyu-cvetovuyu-palitru",
+        destination: "/articles/kak-sostavit-lichnuyu-cvetovuyu-palitru",
+        permanent: true,
+      },
     ];
   },
 };

@@ -117,10 +117,18 @@ export default function Footer() {
             </li>
             <li>
               <Link
+                href="/articles"
+                className="hover:text-white transition-colors"
+              >
+                Статьи о цветах
+              </Link>
+            </li>
+            <li>
+              <Link
                 href="/horoscopes"
                 className="hover:text-white transition-colors"
               >
-                Гороскопы и статьи
+                Гороскопы
               </Link>
             </li>
             <li>

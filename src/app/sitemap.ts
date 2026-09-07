@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import japaneseColors from "@/data/birthday_colors.json";
 import numerologyData from "@/data/numerology_colors.json";
 import moonColors from "@/data/moon_colors.json";
-import { getSortedPostsData } from "@/lib/blog"; // Импортируем нашу функцию чтения статей
+import { getSortedArticlesData, getSortedPostsData } from "@/lib/blog";
 
 const BASE_URL = "https://colorstrology.ru"; // Используем ваш новый домен
 
@@ -33,6 +33,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 0.9,
     }, // Бывший Блог
+    {
+      url: `${BASE_URL}/articles`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
 
     // Калькуляторы и тесты
     {
@@ -118,6 +124,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${BASE_URL}/horoscopes/${post.slug}`,
       lastModified: new Date(post.date), // Берем реальную дату публикации статьи из Frontmatter
       changeFrequency: "weekly",
+      priority: 0.7,
+    });
+  });
+
+  const articles = getSortedArticlesData();
+  articles.forEach((article) => {
+    sitemapData.push({
+      url: `${BASE_URL}/articles/${article.slug}`,
+      lastModified: new Date(article.date),
+      changeFrequency: "monthly",
       priority: 0.7,
     });
   });
