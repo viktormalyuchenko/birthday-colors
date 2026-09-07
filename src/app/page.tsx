@@ -5,6 +5,7 @@ import Link from "next/link";
 import japaneseColors from "@/data/birthday_colors.json";
 import pantoneMonths from "@/data/pantone_months.json";
 import weekdayColors from "@/data/weekday_colors.json";
+import BirthdayFinder from "@/components/BirthdayFinder";
 
 function getContrast(hex: string) {
   if (!hex) return "#111827";
@@ -75,7 +76,7 @@ export default function Home() {
                 name: "Как рассчитать совместимость по фазам луны?",
                 acceptedAnswer: {
                   "@type": "Answer",
-                  text: "В нашем калькуляторе вы вводите две даты рождения. Алгоритм вычисляет лунные фазы и накладывает их друг на друга. Если они образуют идеальное Полнолуние — у вас высокая совместимость.",
+                  text: "В нашем калькуляторе вы вводите две даты рождения. Алгоритм вычисляет лунные фазы и накладывает их друг на друга. Результат показывает наложение двух лунных дисков, а не оценку отношений.",
                 },
               },
               {
@@ -91,13 +92,18 @@ export default function Home() {
         }}
       />
       {/* --- SEO ЗАГОЛОВОК И HERO --- */}
-      <section className="pt-16 pb-10 px-4 text-center max-w-4xl mx-auto">
+      <section className="grid items-center gap-10 px-4 py-12 md:py-20 lg:grid-cols-2 max-w-7xl mx-auto">
+        <div>
+        <p className="mb-5 text-xs font-bold uppercase tracking-[0.25em] text-indigo-600">Ваша история в цвете</p>
         <h1 className="text-5xl md:text-7xl font-black mb-6 font-serif tracking-tight text-gray-900 leading-tight">
-          Цвет дня <br /> и даты рождения
+          Какого цвета<br />ваш день рождения?
         </h1>
         <p className="text-lg md:text-xl text-gray-500 mb-2">
-          Узнайте, какие оттенки управляют вашей судьбой и сегодняшним днем.
+          Найдите свой оттенок в японском календаре или Pantone. Сохраните цвет, сравните его с цветом близкого человека и соберите свою палитру.
         </p>
+        <div aria-hidden="true" className="mt-8 flex h-14 max-w-sm overflow-hidden rounded-2xl">{["#CDA37F","#D3B7D6","#B1DBD9","#5267A8","#E35D52"].map(color=><span key={color} className="flex-1" style={{backgroundColor:color}}/>)}</div>
+        </div>
+        <BirthdayFinder />
       </section>
 
       {/* --- БЛОК 1: ЦВЕТ СЕГОДНЯШНЕГО ДНЯ (Динамический) --- */}
@@ -316,31 +322,6 @@ export default function Home() {
           </Link>
 
           {/* РЯД 3 ------------------------------------------------ */}
-          {/* 5. Фаза Луны (2 колонки) */}
-          <Link
-            href="/moon-phase"
-            className="group md:col-span-2 relative overflow-hidden rounded-[2.5rem] bg-gray-950 text-white p-10 md:p-14 flex flex-col justify-end min-h-[400px] shadow-2xl transition-transform hover:-translate-y-1"
-          >
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1000&auto=format&fit=crop')] opacity-20 group-hover:opacity-30 transition-opacity bg-cover bg-center mix-blend-luminosity" />
-            <div className="relative z-10">
-              <span className="bg-white/20 text-white backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-6 inline-block">
-                Фаза Луны
-              </span>
-              <h2 className="text-4xl md:text-6xl font-serif font-bold mb-4">
-                Лунные
-                <br />
-                фазы
-              </h2>
-              <p className="text-gray-300 text-lg max-w-md mb-8">
-                Узнайте, создают ли ваши души Идеальную Полную Луну. Тренд,
-                покоривший миллионы сердец.
-              </p>
-              <span className="inline-flex items-center gap-2 font-bold uppercase tracking-wider text-sm hover:gap-4 transition-all">
-                Проверить совместимость <span className="text-xl">→</span>
-              </span>
-            </div>
-          </Link>
-
           {/* 6. Цвет имени (1 колонка - адаптировано под дизайн узких карточек) */}
           <Link
             href="/name-color"
@@ -393,37 +374,24 @@ export default function Home() {
             </span>
           </Link>
 
-          {/* РЯД 4 ------------------------------------------------ */}
-          {/* 7. Совместимость по Японским цветам (3 колонки - НА ВСЮ ШИРИНУ ВНИЗУ) */}
-          <Link
-            href="/color-compatibility"
-            className="md:col-span-2 group relative overflow-hidden rounded-[2.5rem] bg-indigo-50 p-8 md:p-14 flex flex-col justify-end min-h-[400px] shadow-sm hover:shadow-xl hover:bg-indigo-100 transition-all border border-indigo-100/50"
-          >
-            {/* Декоративные круги */}
-            <div className="absolute top-10 right-10 flex -space-x-8 opacity-60 group-hover:scale-110 transition-transform">
-              <div className="w-24 h-24 rounded-full bg-rose-400 mix-blend-multiply blur-sm"></div>
-              <div className="w-24 h-24 rounded-full bg-blue-400 mix-blend-multiply blur-sm"></div>
-            </div>
-
-            <div className="relative z-10 w-full md:w-3/4">
-              <span className="bg-indigo-200/50 text-indigo-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-6 inline-block">
-                Цветовая химия
-              </span>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4 text-gray-900 leading-tight">
-                Совместимость
-                <br />
-                Цветов
-              </h2>
-              <p className="text-gray-600 text-base md:text-lg mb-8 leading-relaxed max-w-2xl">
-                Смешайте цвета своих душ. Введите две даты рождения, чтобы
-                узнать психологическую химию вашей пары и ваш потенциал.
-              </p>
-              <span className="inline-flex items-center gap-2 text-indigo-600 font-bold uppercase tracking-wider text-sm group-hover:gap-4 transition-all">
-                Проверить пару <span className="text-xl">→</span>
-              </span>
-            </div>
-          </Link>
         </div>
+      </section>
+
+      <section className="mx-auto mb-16 grid max-w-7xl gap-5 px-4 md:grid-cols-2" aria-label="Два способа сравнить пару">
+        <Link href="/moon-phase" className="relative overflow-hidden rounded-3xl bg-[#141727] p-7 text-white md:p-10">
+          <div aria-hidden="true" className="mb-6 flex gap-3 text-5xl text-indigo-100">◐ ◑</div>
+          <p className="mb-2 text-xs uppercase tracking-widest text-indigo-200">Две даты • две Луны</p>
+          <h2 className="mb-3 font-serif text-3xl font-bold">Как выглядят ваши Луны вместе?</h2>
+          <p className="mb-6 max-w-md text-slate-300">Узнайте фазы Луны в дни рождения и посмотрите их наложение.</p>
+          <span className="font-bold">Сравнить фазы →</span>
+        </Link>
+        <Link href="/color-compatibility" className="rounded-3xl border border-rose-100 bg-[#f4e7e4] p-7 md:p-10">
+          <div aria-hidden="true" className="mb-6 flex -space-x-4"><span className="h-12 w-12 rounded-full bg-rose-400 mix-blend-multiply"/><span className="h-12 w-12 rounded-full bg-blue-400 mix-blend-multiply"/></div>
+          <p className="mb-2 text-xs uppercase tracking-widest text-rose-800">Два человека • одна палитра</p>
+          <h2 className="mb-3 font-serif text-3xl font-bold">Какие цвета у вашей пары?</h2>
+          <p className="mb-6 max-w-md text-gray-600">Найдите два оттенка рождения и посмотрите, как они сочетаются.</p>
+          <span className="font-bold">Составить палитру пары →</span>
+        </Link>
       </section>
 
       <section className="max-w-4xl mx-auto px-4 mt-24 mb-12">
@@ -453,8 +421,7 @@ export default function Home() {
               Тренд на совместимость по фазе Луны (Moon Phase Soulmates) основан
               на поиске астрономического дополнения. В нашем калькуляторе вы
               вводите две даты, а алгоритм математически вычисляет фазы и
-              накладывает их друг на друга. Если ваши луны образуют идеальное
-              Полнолуние — вы являетесь родственными душами.
+              накладывает их друг на друга. Наложение показывает визуальное сочетание фаз и не определяет качество отношений.
             </p>
           </div>
 

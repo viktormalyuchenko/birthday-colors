@@ -86,7 +86,7 @@ export default function AuraPage() {
   const calculateAura = (e: React.FormEvent) => {
     e.preventDefault();
     if (!date) return;
-    const day = parseInt(date.split("-")[2], 10); // Берем только день рождения
+    const day = Number(date); // Берем только день рождения
 
     // Сводим день к числу от 1 до 9 (по ведической нумерологии влияет именно число рождения)
     let sum = day;
@@ -117,25 +117,19 @@ export default function AuraPage() {
         {!result ? (
           <div className="text-center animate-in fade-in duration-700 mt-12">
             <h1 className="text-5xl md:text-7xl font-black font-serif mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 pb-2">
-              Цвет вашей Ауры
+              Цвет ауры по дню рождения
             </h1>
             <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto">
-              Ведическая нумерология (Санкхья-шастра) связывает день вашего
-              рождения с одной из 7 чакр. Узнайте доминирующий цвет вашей ауры и
-              вашу главную духовную силу.
+              Выберите день месяца и получите символический цвет и связанную с ним чакру по таблице сайта. Это развлекательный расчёт: он не измеряет ауру или состояние здоровья.
             </p>
             <form
               onSubmit={calculateAura}
               className="flex flex-col sm:flex-row gap-4 justify-center bg-white/5 p-6 rounded-3xl border border-white/10 backdrop-blur-md max-w-lg mx-auto"
             >
-              <input
-                type="date"
-                required
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="bg-transparent text-xl font-bold focus:outline-none flex-grow"
-                style={{ colorScheme: "dark" }}
-              />
+              <select aria-label="День рождения" required value={date} onChange={e=>setDate(e.target.value)} className="bg-[#171717] rounded-xl p-4 text-white min-w-0" style={{colorScheme:"dark"}}>
+                <option value="">День рождения</option>
+                {Array.from({length:31},(_,i)=><option key={i+1} value={i+1}>{i+1}</option>)}
+              </select>
               <button
                 type="submit"
                 className="bg-white text-black font-bold px-8 py-4 rounded-2xl hover:bg-gray-200 transition-transform active:scale-95"
@@ -147,7 +141,7 @@ export default function AuraPage() {
         ) : (
           <div className="text-center animate-in zoom-in-95 fade-in duration-1000 mt-12">
             <span className="uppercase tracking-widest text-sm font-bold opacity-70 mb-4 inline-block">
-              Доминирующая Чакра: {result.name}
+              Символическая чакра: {result.name}
             </span>
             <h1
               className="text-6xl md:text-8xl font-black font-serif mb-8 drop-shadow-2xl"
@@ -170,64 +164,28 @@ export default function AuraPage() {
                 Главная энергия: {result.feature}
               </h3>
               <p className="text-lg leading-relaxed text-gray-300 mb-8">
-                {result.desc}
+                Цвет в этой системе связан с темой «{result.feature}». Используйте его как образ для творчества, а не как вывод о своих качествах.
               </p>
 
               <button
                 onClick={() => setResult(null)}
                 className="text-sm font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors border-b border-gray-600 pb-1"
               >
-                Рассчитать другую дату
+                Выбрать другой день
               </button>
             </div>
           </div>
         )}
 
         {/* SEO БЛОК ДЛЯ АУРЫ */}
-        <article className="mt-32 pt-16 border-t border-white/10 prose prose-lg prose-invert max-w-4xl mx-auto text-gray-400">
-          <h2 className="text-3xl font-black font-serif text-white mb-6">
-            Как связаны чакры, аура и дата рождения?
-          </h2>
-          <p>
-            В ведической астрологии и нумерологии считается, что число вашего
-            рождения (день) несет самую мощную вибрационную нагрузку. Оно
-            определяет вашу ведущую чакру — энергетический центр в теле
-            человека.
-          </p>
-          <p>
-            Цвет вашей ауры напрямую зависит от того, какая чакра у вас наиболее
-            активна:
-          </p>
-          <ul className="text-gray-300">
-            <li>
-              <strong>Муладхара (Корневая)</strong> — Красный цвет. Отвечает за
-              выживание и материальный достаток.
-            </li>
-            <li>
-              <strong>Свадхистана (Сакральная)</strong> — Оранжевый цвет.
-              Источник творчества и сексуальности.
-            </li>
-            <li>
-              <strong>Манипура (Солнечное сплетение)</strong> — Желтый цвет.
-              Центр воли, власти и интеллекта.
-            </li>
-            <li>
-              <strong>Анахата (Сердечная)</strong> — Зеленый цвет. Отвечает за
-              любовь, эмпатию и сострадание.
-            </li>
-            <li>
-              <strong>Вишудха (Горловая)</strong> — Голубой цвет. Центр
-              коммуникации и самовыражения.
-            </li>
-            <li>
-              <strong>Аджна (Третий глаз)</strong> — Синий/Индиго. Отвечает за
-              интуицию и предвидение.
-            </li>
-            <li>
-              <strong>Сахасрара (Коронная)</strong> — Фиолетовый цвет. Центр
-              духовного просветления.
-            </li>
-          </ul>
+        <article className="mt-16 pt-10 border-t border-white/10 max-w-4xl mx-auto text-gray-300 space-y-6 leading-relaxed">
+          <h2 className="text-3xl font-bold text-white">Как выбирается цвет ауры</h2>
+          <p>Используется только день месяца: например, 28 → 2 + 8 = 10 → 1 + 0 = 1. Месяц и год не участвуют. Полученное число сопоставляется с цветом в таблице ниже. Это правило нашего калькулятора, а не способ наблюдения реальной ауры.</p>
+          <h2 className="text-2xl font-bold text-white">Таблица чисел, цветов и чакр</h2>
+          <div className="grid sm:grid-cols-2 gap-3">{Object.entries(CHAKRAS_DATA).map(([number,item])=><div key={number} className="flex gap-4 items-center rounded-2xl border border-white/15 bg-white/5 p-4"><span aria-hidden="true" className="w-12 h-12 shrink-0 rounded-full" style={{backgroundColor:item.color1}}/><div><h3 className="font-bold text-white">{number} — {item.aura}</h3><p>{item.name}</p><p className="font-mono text-sm">{item.color1}</p></div></div>)}</div>
+          <details className="rounded-2xl border border-white/15 p-5"><summary className="font-bold cursor-pointer">Почему у разных людей одинаковый результат?</summary><p className="mt-3">Дни 1, 10, 19 и 28 сводятся к единице. Кроме того, в таблице некоторые числа связаны с одной чакрой. Результат не является уникальным описанием человека.</p></details>
+          <details className="rounded-2xl border border-white/15 p-5"><summary className="font-bold cursor-pointer">Это то же самое, что цвет числа судьбы?</summary><p className="mt-3">Нет. Здесь учитывается только день, а число судьбы складывается из всех цифр даты рождения. Эти символические системы могут дать разные цвета.</p></details>
+          <Link href="/numerology" className="inline-block text-purple-200 underline font-bold">Посчитать число судьбы по полной дате →</Link>
         </article>
       </div>
     </main>

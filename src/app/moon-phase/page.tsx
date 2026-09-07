@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useRef, useId } from "react";
+import { useState, useId } from "react";
 import Link from "next/link";
 import moonPhasesInfo from "@/data/moon_phases_info.json";
+import CompatibilityNav from "@/components/CompatibilityNav";
 
 // Высококачественная текстура Луны (прозрачный PNG)
 const MOON_IMAGE_URL =
@@ -55,7 +56,7 @@ function RealisticMoon({
   }
 
   if (phase <= 0.01 || phase >= 0.99)
-    d = `M 100,0 A 100,100 0 0,1 100,200 A 100,100 0 0,1 100,0`;
+    d = "M 0,0";
   if (phase > 0.49 && phase < 0.51)
     d = `M 100,0 A 100,100 0 0,0 100,200 A 100,100 0 0,0 100,0`;
 
@@ -94,7 +95,7 @@ function RealisticMoon({
 
 // --- ГЛАВНАЯ СТРАНИЦА ---
 export default function MoonPhaseTrend() {
-  const [tab, setTab] = useState<"single" | "couple">("single");
+  const [tab, setTab] = useState<"single" | "couple">("couple");
 
   // Состояния
   const [date1, setDate1] = useState("");
@@ -104,8 +105,6 @@ export default function MoonPhaseTrend() {
   const [phase2, setPhase2] = useState<number | null>(null);
 
   const [isMerging, setIsMerging] = useState(false);
-  const [compatibility, setCompatibility] = useState(0);
-  const [showTiktokStudio, setShowTiktokStudio] = useState(false);
 
   // Расчет Одиночной Луны
   const info1 = phase1 !== null ? getPhaseInfo(phase1) : null;
@@ -119,9 +118,6 @@ export default function MoonPhaseTrend() {
     setPhase2(p2);
     setIsMerging(false);
 
-    const diff = Math.abs(p1 + p2 - 1);
-    const score = Math.max(0, 100 - diff * 100);
-    setCompatibility(Math.round(score));
 
     setTimeout(() => setIsMerging(true), 800);
   };
@@ -146,9 +142,11 @@ export default function MoonPhaseTrend() {
           </Link>
         </div>
 
-        <h1 className="text-4xl md:text-6xl font-serif font-black text-center mb-8 drop-shadow-md">
-          Лунные Фазы
+        <CompatibilityNav active="moon" />
+        <h1 className="text-4xl md:text-6xl font-serif font-black text-center mb-5 drop-shadow-md">
+          Две даты. Две Луны.<br />Ваша общая картина.
         </h1>
+        <p className="mb-8 max-w-2xl text-center text-lg leading-relaxed text-slate-300">Сравните фазы Луны в дни рождения — или узнайте свою. Даты рассчитываются приблизительно, без времени и места рождения.</p>
 
         {/* Переключатель вкладок */}
         <div className="flex bg-white/10 p-1 rounded-full mb-12 backdrop-blur-md border border-white/5">
@@ -169,10 +167,7 @@ export default function MoonPhaseTrend() {
             }}
             className={`px-8 py-3 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${tab === "couple" ? "bg-indigo-600 text-white shadow-md" : "text-gray-400 hover:text-white"}`}
           >
-            Совместимость{" "}
-            <span className="bg-red-500 text-white text-[9px] px-2 py-0.5 rounded-full uppercase">
-              Тренд
-            </span>
+            Совместимость
           </button>
         </div>
 
@@ -185,6 +180,7 @@ export default function MoonPhaseTrend() {
             >
               <input
                 type="date"
+                aria-label="Ваша дата рождения"
                 required
                 value={date1}
                 onChange={(e) => setDate1(e.target.value)}
@@ -202,7 +198,7 @@ export default function MoonPhaseTrend() {
             {phase1 !== null && info1 && (
               <div className="flex flex-col md:flex-row items-center gap-12 bg-white/5 border border-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-sm animate-in fade-in zoom-in duration-700">
                 <div className="flex-shrink-0">
-                  <RealisticMoon phase={phase1} size={280} glow={true} />
+                  <RealisticMoon phase={phase1} size={220} glow={true} />
                 </div>
                 <div>
                   <p className="text-gray-400 font-mono tracking-widest text-sm mb-2">
@@ -240,6 +236,7 @@ export default function MoonPhaseTrend() {
                 </label>
                 <input
                   type="date"
+                  aria-label="Ваша дата рождения"
                   required
                   value={date1}
                   onChange={(e) => setDate1(e.target.value)}
@@ -253,6 +250,7 @@ export default function MoonPhaseTrend() {
                 </label>
                 <input
                   type="date"
+                  aria-label="Дата рождения второго человека"
                   required
                   value={date2}
                   onChange={(e) => setDate2(e.target.value)}
@@ -264,7 +262,7 @@ export default function MoonPhaseTrend() {
                 type="submit"
                 className="bg-indigo-600 text-white font-bold px-8 py-4 rounded-3xl hover:bg-indigo-500 transition-transform active:scale-95 text-lg shadow-lg shadow-indigo-600/20"
               >
-                Слить Луны ✨
+                Сравнить Луны
               </button>
             </form>
 
@@ -276,7 +274,7 @@ export default function MoonPhaseTrend() {
                     style={{
                       transform: isMerging
                         ? "translateX(0)"
-                        : "translateX(-130px)",
+                        : "translateX(-45px)",
                       mixBlendMode: "screen",
                     }}
                   >
@@ -287,7 +285,7 @@ export default function MoonPhaseTrend() {
                     style={{
                       transform: isMerging
                         ? "translateX(0)"
-                        : "translateX(130px)",
+                        : "translateX(45px)",
                       mixBlendMode: "screen",
                     }}
                   >
@@ -298,15 +296,12 @@ export default function MoonPhaseTrend() {
                 <div
                   className={`mt-4 text-center transition-all duration-1000 ${isMerging ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
                 >
-                  <h2 className="text-7xl font-black font-serif mb-4 drop-shadow-md text-indigo-100">
-                    {compatibility}%
+                  <h2 className="text-3xl font-black font-serif mb-4 text-indigo-100">
+                    Ваши Луны вместе
                   </h2>
-                  {/* <button
-                    onClick={() => setShowTiktokStudio(true)}
-                    className="mt-6 bg-white text-black px-8 py-4 rounded-full font-bold hover:bg-gray-200 transition flex items-center gap-3 mx-auto"
-                  >
-                    <span>📱</span> Снять для TikTok
-                  </button> */}
+                  <p className="mx-auto mb-6 max-w-lg text-slate-300">Наложение светлых частей двух лунных дисков. Это визуальный эксперимент, а не оценка совместимости отношений.</p>
+                  <div className="grid gap-4 sm:grid-cols-2" aria-live="polite">{[{phase:phase1,date:date1,label:"Первая Луна"},{phase:phase2,date:date2,label:"Вторая Луна"}].map(item=><div key={item.label} className="rounded-2xl border border-white/10 bg-white/5 p-6"><p className="text-sm text-slate-400">{item.label} · {item.date}</p><h3 className="my-2 text-xl font-bold">{getPhaseInfo(item.phase).name}</h3><p className="text-indigo-200">Освещено примерно {Math.round((1-Math.cos(2*Math.PI*item.phase))*50)}%</p></div>)}</div>
+
                 </div>
               </div>
             )}
@@ -314,58 +309,14 @@ export default function MoonPhaseTrend() {
         )}
       </div>
 
-      {/* --- СТУДИЯ ЗАПИСИ TIKTOK (ПОЛНЫЙ ЭКРАН) --- */}
-      {showTiktokStudio && phase1 !== null && phase2 !== null && (
-        <div className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center">
-          {/* Кнопка закрытия (полупрозрачная, чтобы не мешала видео) */}
-          <button
-            onClick={() => setShowTiktokStudio(false)}
-            className="absolute top-12 right-6 text-white/50 text-xl font-bold z-50 px-4 py-2 border border-white/20 rounded-full backdrop-blur-md"
-          >
-            Закрыть
-          </button>
+      <section className="relative z-10 mx-auto my-16 w-full max-w-3xl px-5 text-slate-300">
+        <h2 className="mb-5 font-serif text-2xl font-bold text-white">Что показывает сравнение?</h2>
+        <p className="mb-6 leading-relaxed">Для каждой даты мы оцениваем положение в лунном цикле и показываем освещённую часть диска. Близкие фазы выглядят похоже, а растущая и убывающая Луна могут дополнять друг друга на картинке.</p>
+        <details className="border-t border-white/15 py-4"><summary className="cursor-pointer font-semibold text-white">Почему не нужен час рождения?</summary><p className="mt-3">Здесь используется приближённый расчёт по средней длине лунного цикла. Для точного астрономического результата, особенно около смены фаз, нужны время и более точные эфемериды.</p></details>
+        <details className="border-t border-white/15 py-4"><summary className="cursor-pointer font-semibold text-white">Полная Луна означает идеальную пару?</summary><p className="mt-3">Нет. Наложение показывает сочетание двух изображений. Отношения не определяются фазами Луны.</p></details>
+        <Link href="/color-compatibility" className="mt-6 inline-block rounded-xl bg-white px-6 py-4 font-bold text-gray-900">Теперь сравнить цвета рождения →</Link>
+      </section>
 
-          <p className="absolute top-12 text-white/50 text-sm tracking-widest uppercase animate-pulse">
-            Включите запись экрана
-          </p>
-
-          <div className="relative h-[400px] w-full flex justify-center items-center">
-            {/* Анимация запускается заново при открытии студии благодаря keyframes (здесь используем простой CSS trick) */}
-            <div
-              className="absolute animate-[mergeLeft_4s_ease-in-out_forwards]"
-              style={{ mixBlendMode: "screen" }}
-            >
-              <RealisticMoon phase={phase1} size={300} glow={true} />
-            </div>
-            <div
-              className="absolute animate-[mergeRight_4s_ease-in-out_forwards]"
-              style={{ mixBlendMode: "screen" }}
-            >
-              <RealisticMoon phase={phase2} size={300} glow={true} />
-            </div>
-          </div>
-
-          <div className="mt-12 text-center animate-[fadeInUp_5s_ease-in-out_forwards] opacity-0">
-            <h2 className="text-8xl font-black font-serif drop-shadow-lg">
-              {compatibility}%
-            </h2>
-            <p className="text-2xl mt-4 text-gray-400 font-serif">
-              Colorstrology.
-            </p>
-          </div>
-
-          {/* Добавляем кастомные анимации в tailwind (через style) */}
-          <style
-            dangerouslySetInnerHTML={{
-              __html: `
-            @keyframes mergeLeft { 0% { transform: translateX(-160px); } 100% { transform: translateX(0); } }
-            @keyframes mergeRight { 0% { transform: translateX(160px); } 100% { transform: translateX(0); } }
-            @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(20px); } 80% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
-          `,
-            }}
-          />
-        </div>
-      )}
     </main>
   );
 }

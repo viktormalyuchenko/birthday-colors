@@ -1,22 +1,8 @@
 import type { Metadata } from "next";
-
 export const metadata: Metadata = {
-  title: "Цветовой код имени | Палитра вашей личности",
-  description:
-    "Узнайте свой личный цвет по имени и фамилии. Бесплатный калькулятор цвета имени на основе пифагорейской нумерологии и психологии цвета.",
-  keywords: [
-    "цвет имени",
-    "нумерология имени",
-    "цвет личности по имени",
-    "палитра имени",
-    "пифагор",
-  ],
+  title: "Цвет имени — калькулятор и палитра букв онлайн",
+  description: "Введите имя и получите цветной штрихкод, итоговый HEX и объяснение расчёта. Русские и латинские буквы, полное имя или псевдоним.",
+  alternates: { canonical: "https://colorstrology.ru/name-color" },
+  openGraph: { title: "Цвет имени — калькулятор и палитра букв онлайн", description: "Введите имя и получите цветной штрихкод, итоговый HEX и объяснение расчёта. Русские и латинские буквы, полное имя или псевдоним.", url: "https://colorstrology.ru/name-color", type: "website" },
 };
-
-export default function NameColorLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return children;
-}
+export default function Layout({children}: {children: React.ReactNode}) { return children; }

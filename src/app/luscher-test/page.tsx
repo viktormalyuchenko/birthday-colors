@@ -17,14 +17,13 @@ const INITIAL_COLORS = [
 ];
 
 export default function LuscherTestPage() {
-  const [availableColors, setAvailableColors] = useState(INITIAL_COLORS);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isFinished, setIsFinished] = useState(false);
 
   const handleColorClick = (id: string) => {
+    if (selectedIds.includes(id)) return;
     const newSelected = [...selectedIds, id];
     setSelectedIds(newSelected);
-    setAvailableColors(availableColors.filter((c) => c.id !== id));
 
     if (newSelected.length === 8) {
       setIsFinished(true);
@@ -32,48 +31,55 @@ export default function LuscherTestPage() {
   };
 
   const restartTest = () => {
-    setAvailableColors(INITIAL_COLORS);
     setSelectedIds([]);
     setIsFinished(false);
   };
 
   return (
-    <main className="min-h-screen bg-[#F9F9F8] py-16 px-4 font-sans text-gray-900">
+    <main className="min-h-screen bg-[#F9F9F8] py-6 md:py-16 px-4 font-sans text-gray-900">
       <div className="max-w-5xl mx-auto">
         <Breadcrumbs items={[{ label: "Тест Люшера" }]} />
 
         {!isFinished ? (
           <div className="text-center animate-in fade-in duration-700">
-            <h1 className="text-5xl md:text-6xl font-black font-serif mb-6">
-              Тест Макса Люшера
+            <h1 className="text-3xl md:text-6xl font-black font-serif mb-4 md:mb-6">
+              Тест Люшера онлайн: 8 цветов
             </h1>
-            <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+            <p className="text-base md:text-lg text-gray-600 mb-5 md:mb-8 max-w-2xl mx-auto">
               Выберите цвет, который вам{" "}
               <strong>наиболее приятен прямо сейчас</strong>. Не пытайтесь
               ассоциировать его с одеждой или машинами. Действуйте интуитивно.
-              Осталось выбрать: {8 - selectedIds.length}
+              Это упрощённая демонстрация цветового выбора, не психологическая диагностика.
             </p>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-              {availableColors.map((color) => (
+            <div className="max-w-3xl mx-auto mb-6" aria-live="polite">
+              <p className="text-sm text-gray-600 mb-3">Выбрано {selectedIds.length} из 8. Выберите следующий приятный цвет.</p>
+              <div className="flex gap-2">{Array.from({length:8},(_,i)=><span key={i} className="h-3 flex-1 rounded-full" style={{backgroundColor:INITIAL_COLORS.find(c=>c.id===selectedIds[i])?.hex ?? "#e5e7eb"}} />)}</div>
+            </div>
+            <div className="grid grid-cols-4 gap-2 sm:gap-4 max-w-3xl mx-auto">
+              {INITIAL_COLORS.map((color) => (
                 <button
                   key={color.id}
+                  type="button"
+                  disabled={selectedIds.includes(color.id)}
                   onClick={() => handleColorClick(color.id)}
-                  className="h-32 rounded-3xl shadow-md hover:shadow-xl hover:scale-105 transition-all active:scale-95"
-                  style={{ backgroundColor: color.hex }}
-                  aria-label={color.name}
-                />
+                  className="h-20 sm:h-28 md:h-32 rounded-2xl shadow-sm enabled:hover:shadow-lg enabled:active:scale-95 transition-transform focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-600 disabled:shadow-none disabled:border disabled:border-gray-200"
+                  style={{ backgroundColor: selectedIds.includes(color.id) ? '#e5e7eb' : color.hex }}
+                  aria-label={selectedIds.includes(color.id) ? `${color.name}: выбран ${selectedIds.indexOf(color.id) + 1}-м` : color.name}
+                >
+                  {selectedIds.includes(color.id) && <span className="text-gray-600 text-sm font-bold" aria-hidden="true">✓ {selectedIds.indexOf(color.id) + 1}</span>}
+                </button>
               ))}
             </div>
+            <button type="button" disabled={selectedIds.length === 0} onClick={() => setSelectedIds(selectedIds.slice(0, -1))} className="mt-4 min-h-12 px-5 py-3 rounded-xl border border-gray-300 text-sm font-semibold text-gray-700 disabled:opacity-40 enabled:hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Отменить последний выбор</button>
           </div>
         ) : (
           <div className="animate-in slide-in-from-bottom-10 fade-in duration-1000">
-            <h1 className="text-5xl font-black font-serif mb-8 text-center">
-              Психологический срез
+            <h1 className="text-3xl md:text-5xl font-black font-serif mb-6 text-center">
+              Ваш порядок цветов
             </h1>
             <p className="text-center text-gray-500 mb-12">
-              Ваш бессознательный выбор раскрывает истинные потребности и
-              скрытые источники стресса.
+              Ниже — условные интерпретации первого и последнего выбора, а не заключение о вашем состоянии.
             </p>
 
             {/* Выбранная палитра */}
@@ -94,7 +100,7 @@ export default function LuscherTestPage() {
               {/* Явные цели (1 и 2 выбор) */}
               <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                 <h3 className="text-xl font-bold mb-6 font-serif text-indigo-600 border-b pb-2">
-                  Желаемые цели и средства
+                  Первые два цвета: интерпретация
                 </h3>
                 <p className="text-gray-700 leading-relaxed mb-4">
                   <strong>
@@ -113,7 +119,7 @@ export default function LuscherTestPage() {
               {/* Подавленные потребности / Стресс (7 и 8 выбор) */}
               <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                 <h3 className="text-xl font-bold mb-6 font-serif text-red-500 border-b pb-2">
-                  Источники стресса и подавления
+                  Последние два цвета: интерпретация
                 </h3>
                 <p className="text-gray-700 leading-relaxed mb-4">
                   <strong>
@@ -141,50 +147,15 @@ export default function LuscherTestPage() {
           </div>
         )}
       </div>
-      <article className="mt-32 pt-16 border-t border-gray-200 prose prose-lg max-w-4xl mx-auto text-gray-600 pb-16">
-        <h2 className="text-3xl font-black font-serif text-gray-900 mb-6">
-          О тесте Макса Люшера
-        </h2>
-        <p>
-          Цветовой тест Люшера (Lüscher Color Test) — это проективная методика
-          исследования личности, разработанная швейцарским психотерапевтом
-          Максом Люшером в 1947 году. В основе теста лежит доказанный факт:
-          восприятие цвета является объективным и универсальным для всех людей,
-          а вот предпочтение того или иного цвета строго субъективно и зависит
-          от текущего психологического состояния.
-        </p>
-        <h3 className="text-xl font-bold text-gray-900 mt-8 mb-4">
-          Как цвет отражает ваше состояние?
-        </h3>
-        <p>
-          В нашем онлайн-калькуляторе представлена классическая короткая версия
-          теста (восьмицветовой ряд). Каждому из 8 цветов Люшер присвоил
-          определенное символическое значение:
-        </p>
-        <ul>
-          <li>
-            <strong>Основные цвета (Синий, Зеленый, Красный, Желтый)</strong>{" "}
-            символизируют базовые психологические потребности: покой,
-            самоутверждение, действие и надежду. Здоровый и уравновешенный
-            человек обычно выбирает эти цвета первыми.
-          </li>
-          <li>
-            <strong>
-              Дополнительные цвета (Фиолетовый, Коричневый, Черный, Серый)
-            </strong>{" "}
-            символизируют тревоги, стресс, потребность в уединении или
-            физическом комфорте. Если они оказываются на первых позициях, это
-            указывает на внутренний конфликт или истощение.
-          </li>
-        </ul>
-        <p>
-          Важно понимать, что тест Люшера оценивает{" "}
-          <strong>
-            не устойчивые черты характера, а ваше состояние "здесь и сейчас"
-          </strong>
-          . Поэтому результаты теста могут меняться в зависимости от вашего
-          настроения, самочувствия или уровня усталости.
-        </p>
+      <article className="mt-16 pt-10 border-t border-gray-200 max-w-4xl mx-auto text-gray-600 pb-16 space-y-6 leading-relaxed">
+        <h2 className="text-3xl font-bold text-gray-900">Как пройти цветовой тест</h2>
+        <ol className="list-decimal pl-6 space-y-2"><li>Посмотрите на восемь карточек и выберите самый приятный сейчас цвет.</li><li>Повторяйте выбор среди оставшихся цветов, пока не выберете все восемь.</li><li>Посмотрите получившуюся палитру и прочитайте условные толкования.</li></ol>
+        <h2 className="text-2xl font-bold text-gray-900">Что показывает эта версия</h2>
+        <p>Сайт сохраняет порядок одного выбора восьми цветов. Для первых двух карточек и последних двух выводятся готовые описания из нашей таблицы. Это упрощённая онлайн-демонстрация, а не полный профессиональный протокол теста Люшера.</p>
+        <details className="bg-white rounded-2xl p-5"><summary className="font-bold cursor-pointer">Можно ли определить стресс или поставить диагноз?</summary><p className="mt-3">Этот инструмент для этого не предназначен. Не делайте выводов о здоровье или личности по порядку цветов. Тексты результата — повод для размышления, а не оценка специалиста.</p></details>
+        <details className="bg-white rounded-2xl p-5"><summary className="font-bold cursor-pointer">Почему на другом экране цвета отличаются?</summary><p className="mt-3">На отображение влияют яркость, настройки дисплея и ночной режим. Карточки на сайте не являются стандартизированным печатным набором.</p></details>
+        <details className="bg-white rounded-2xl p-5"><summary className="font-bold cursor-pointer">Есть правильный порядок?</summary><p className="mt-3">В этом упражнении не нужно угадывать правильный ответ. Выбирайте то, что нравится сейчас. Другой порядок при повторном прохождении сам по себе ничего не доказывает.</p></details>
+        <Link href="/name-color" className="inline-block font-bold text-indigo-700 underline">Попробовать другой эксперимент: палитра имени →</Link>
       </article>
     </main>
   );

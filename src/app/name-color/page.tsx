@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import numerologyData from "@/data/numerology_colors.json";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -74,13 +75,16 @@ function getContrastYIQ(hex: string) {
 }
 
 export default function NameColorPage() {
+  const [error, setError] = useState("");
+  const [calculation, setCalculation] = useState("");
   const [name, setName] = useState("");
   const [palette, setPalette] = useState<{ char: string; color: any }[]>([]);
   const [finalColor, setFinalColor] = useState<any>(null);
 
   const calculateName = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name) return;
+    setError("");
+    if (!/[а-яёa-z]/i.test(name)) { setError("Введите имя русскими или латинскими буквами."); setFinalColor(null); return; }
 
     let sum = 0;
     const newPalette = [];
@@ -98,13 +102,16 @@ export default function NameColorPage() {
       }
     }
 
+    const steps = [sum];
     while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
       sum = sum
         .toString()
         .split("")
         .reduce((a, b) => a + parseInt(b), 0);
+      steps.push(sum);
     }
 
+    setCalculation(steps.join(" → "));
     setPalette(newPalette);
     setFinalColor((numerologyData as any)[sum.toString()]);
   };
@@ -115,11 +122,10 @@ export default function NameColorPage() {
         <Breadcrumbs items={[{ label: "Цветовой код имени" }]} />
 
         <h1 className="text-5xl md:text-7xl font-black text-gray-900 mb-6 font-serif tracking-tight">
-          Палитра Имени
+          Какого цвета ваше имя?
         </h1>
         <p className="text-lg md:text-xl text-gray-500 mb-12 max-w-3xl leading-relaxed">
-          Каждая буква излучает свою вибрацию. Введите своё Имя и Фамилию, чтобы
-          увидеть уникальный "штрих-код" вашей души по системе Пифагора.
+          Превратите имя в цветной штрихкод: каждая буква получает оттенок, а сумма букв — общий цвет. Попробуйте полное и короткое имя и сравните палитры.
         </p>
 
         <form
@@ -127,21 +133,24 @@ export default function NameColorPage() {
           className="flex flex-col md:flex-row gap-4 mb-20 bg-white p-4 md:p-6 rounded-3xl shadow-sm border border-gray-100"
         >
           <input
+            aria-label="Имя или имя и фамилия"
+            maxLength={60}
             type="text"
             required
             placeholder="Например: Анна Смирнова"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => { setName(e.target.value); setFinalColor(null); setError(""); }}
             className="flex-grow px-6 py-4 rounded-2xl bg-gray-50 border border-gray-200 text-xl font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <button
             type="submit"
             className="bg-gray-900 text-white font-bold px-10 py-4 rounded-2xl hover:bg-indigo-600 transition-colors shadow-lg active:scale-95"
           >
-            Рассчитать
+            Показать цвета имени
           </button>
         </form>
 
+        {error && <p role="alert" className="text-red-700 mb-6">{error}</p>}
         {finalColor && (
           <div className="animate-in fade-in slide-in-from-bottom-10 duration-1000">
             <h3 className="text-sm font-bold uppercase tracking-widest text-indigo-500 mb-4 text-center">
@@ -154,13 +163,13 @@ export default function NameColorPage() {
                 item.color ? (
                   <div
                     key={i}
-                    className="flex-grow h-full flex flex-col justify-end items-center pb-4 transition-all duration-500 hover:flex-grow-[3]"
+                    className="min-w-0 flex-1 h-full flex flex-col justify-end items-center pb-4 transition-all duration-500 hover:flex-grow-[3]"
                     style={{
                       backgroundColor: item.color.hex,
                       color: getContrastYIQ(item.color.hex),
                     }}
                   >
-                    <span className="font-black text-2xl drop-shadow-md">
+                    <span className="font-black text-xs sm:text-lg drop-shadow-md">
                       {item.char}
                     </span>
                   </div>
@@ -171,8 +180,7 @@ export default function NameColorPage() {
             </div>
 
             <p className="text-center text-gray-500 text-sm mb-16 max-w-2xl mx-auto">
-              *Наведите на полосу цвета, чтобы расширить её. Каждая буква вносит
-              свой оттенок в формирование вашего характера.
+              Каждая полоса соответствует букве. Числовая сумма: {calculation}. Цвета — условные соответствия этой системы, а не характеристика личности.
             </p>
 
             {/* ИТОГОВЫЙ ЦВЕТ ИМЕНИ */}
@@ -191,13 +199,13 @@ export default function NameColorPage() {
 
               <div className="relative z-10 max-w-2xl">
                 <p className="uppercase tracking-widest text-sm font-bold opacity-80 mb-4 border-b border-current/20 pb-2 inline-block">
-                  Итоговый цвет личности
+                  Итоговый цвет имени
                 </p>
-                <h2 className="text-6xl md:text-8xl font-black font-serif mb-6">
+                <h2 className="text-4xl md:text-7xl break-words font-black font-serif mb-6">
                   {finalColor.ru_name}
                 </h2>
                 <div className="text-2xl font-serif italic opacity-90 mb-8">
-                  {finalColor.en_name} • Планета: {finalColor.planet}
+                  {finalColor.en_name} • {finalColor.hex}
                 </div>
 
                 <div
@@ -219,42 +227,14 @@ export default function NameColorPage() {
             </div>
           </div>
         )}
-        <article className="mt-32 pt-16 border-t border-gray-200 prose prose-lg max-w-4xl mx-auto text-gray-600">
-          <h2 className="text-3xl font-black font-serif text-gray-900 mb-6">
-            Что такое цветовой код имени?
-          </h2>
-          <p>
-            Еще в древности Пифагор утверждал, что Вселенная управляется
-            числами, а каждая буква алфавита обладает своей уникальной числовой
-            вибрацией. Эта система легла в основу{" "}
-            <strong>классической нумерологии</strong>.
-          </p>
-          <p>
-            В нашей системе мы объединили пифагорейскую гематрию (перевод букв в
-            числа) с психологией цвета. Каждое число от 1 до 9 резонирует с
-            определенной планетой и цветом спектра.
-          </p>
-          <h3 className="text-xl font-bold text-gray-900 mt-8 mb-4">
-            Как читать свою палитру?
-          </h3>
-          <ul>
-            <li>
-              <strong>Мелодия имени (Штрих-код):</strong> Показывает, из каких
-              энергий соткано ваше имя. Если в палитре много красных и оранжевых
-              оттенков — вы деятельны и импульсивны. Преобладание синих и
-              фиолетовых тонов говорит о глубоком интеллекте и духовности.
-            </li>
-            <li>
-              <strong>Итоговый цвет личности:</strong> Это "Число выражения".
-              Оно описывает ваши скрытые таланты, то, как вас воспринимают
-              окружающие, и вашу главную жизненную миссию.
-            </li>
-          </ul>
-          <p>
-            Попробуйте ввести свое полное имя, а затем псевдоним или сокращенное
-            имя, чтобы увидеть, как меняется ваша цветовая вибрация в разных
-            жизненных ролях!
-          </p>
+        <article className="mt-16 pt-10 border-t border-gray-200 max-w-4xl mx-auto text-gray-600 space-y-6 leading-relaxed">
+          <h2 className="text-3xl font-bold text-gray-900">Как рассчитывается цвет имени</h2>
+          <p>Русским и латинским буквам присвоены числа от 1 до 9. Мы складываем их значения и сводим сумму к одной цифре, сохраняя 11, 22 и 33. Затем выбираем цвет из таблицы сайта. Пробелы, цифры и знаки препинания не входят в сумму; Е и Ё имеют одинаковое значение.</p>
+          <details className="bg-white rounded-2xl p-5"><summary className="font-bold cursor-pointer">Таблица букв и чисел</summary><div className="mt-4 space-y-2">{Array.from({length:9},(_,i)=><p key={i}><strong>{i+1}:</strong> {Object.entries(LETTER_VALUES).filter(([,value])=>value===i+1).map(([letter])=>letter.toUpperCase()).join(", ")}</p>)}</div></details>
+          <details className="bg-white rounded-2xl p-5"><summary className="font-bold cursor-pointer">Вводить имя или фамилию тоже?</summary><p className="mt-3">Можно только имя, полное имя или псевдоним. Калькулятор учитывает именно введённые буквы. Анна и Аня могут дать разные палитры; регистр букв результат не меняет.</p></details>
+          <h2 className="text-2xl font-bold text-gray-900">Что делать с палитрой</h2>
+          <p>Возьмите итоговый HEX для фона открытки, а оттенки букв — для декоративных полос. Это творческий эксперимент. Символические описания ниже результата не являются психологическим тестом.</p>
+          <Link href="/numerology" className="inline-block font-bold text-indigo-700 underline">Сравнить с цветом числа судьбы →</Link>
         </article>
       </div>
     </main>

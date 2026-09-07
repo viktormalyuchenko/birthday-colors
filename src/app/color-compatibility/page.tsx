@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import japaneseColors from "@/data/birthday_colors.json";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import CompatibilityNav from "@/components/CompatibilityNav";
 
 // --- МАТЕМАТИКА ЦВЕТА: Перевод HEX в HSL ---
 function hexToHSL(hex: string): { h: number; s: number; l: number } {
@@ -178,13 +179,12 @@ export default function ColorCompatibility() {
     <main className="min-h-screen bg-[#F9F9F8] py-20 px-4">
       <div className="max-w-5xl mx-auto">
         <Breadcrumbs items={[{ label: "Совместимость цветов" }]} />
+        <CompatibilityNav active="color" />
         <h1 className="text-5xl md:text-7xl font-black text-gray-900 mb-6 font-serif">
-          Цветовая химия
+          Два цвета.<br />Одна палитра.
         </h1>
         <p className="text-lg md:text-xl text-gray-500 mb-12 max-w-3xl leading-relaxed">
-          У каждого из нас есть свой базовый цвет. Введите две даты рождения,
-          чтобы узнать, как взаимодействуют ваши души на уровне цветовой
-          психологии.
+          Сравните цвета рождения по японскому календарю. Посмотрите два оттенка рядом и найдите сочетание для вашей общей палитры. Год не влияет на цвет.
         </p>
 
         <form
@@ -197,6 +197,7 @@ export default function ColorCompatibility() {
             </label>
             <input
               type="date"
+              aria-label="Ваша дата рождения"
               required
               value={date1}
               onChange={(e) => setDate1(e.target.value)}
@@ -209,6 +210,7 @@ export default function ColorCompatibility() {
             </label>
             <input
               type="date"
+              aria-label="Дата рождения второго человека"
               required
               value={date2}
               onChange={(e) => setDate2(e.target.value)}
@@ -217,18 +219,19 @@ export default function ColorCompatibility() {
           </div>
           <button
             type="submit"
-            className="bg-gray-900 text-white font-bold px-10 rounded-xl hover:bg-indigo-600 transition-colors mt-6 md:mt-0 text-lg shadow-lg active:scale-95"
+            className="bg-gray-900 text-white font-bold px-10 py-4 rounded-xl hover:bg-indigo-600 transition-colors mt-6 md:mt-0 text-lg shadow-lg active:scale-95"
           >
-            Смешать
+            Показать нашу палитру
           </button>
         </form>
 
         {color1 && color2 && families && (
           <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
+            <div className="mb-8 grid grid-cols-2 gap-3">{[color1,color2].map((color,index)=><Link href={`/${color.date_mmdd}`} key={index} className="overflow-hidden rounded-2xl border border-gray-200 bg-white"><div className="h-28 md:h-40" style={{backgroundColor:color.hex}}/><div className="p-4"><p className="text-xs text-gray-500">{index===0?"Ваш оттенок":"Второй оттенок"}</p><h2 className="my-2 font-serif text-lg font-bold">{color.ru_name}</h2><p className="font-mono text-sm">{color.hex}</p><span className="mt-3 inline-block text-sm text-indigo-700">О цвете →</span></div></Link>)}</div>
             {/* КРУГИ СЛИЯНИЯ */}
             <div className="flex justify-center items-center mb-12 relative h-56 md:h-64">
               <div
-                className="w-48 h-48 md:w-56 md:h-56 rounded-full shadow-2xl absolute left-1/2 -translate-x-[85%] mix-blend-multiply flex flex-col items-center justify-center text-center p-4 transition-all duration-1000"
+                className="w-36 h-36 md:w-56 md:h-56 rounded-full shadow-2xl absolute left-1/2 -translate-x-[85%] mix-blend-multiply flex flex-col items-center justify-center text-center p-4 transition-all duration-1000"
                 style={{
                   backgroundColor: color1.hex,
                   color: getContrastYIQ(color1.hex),
@@ -243,7 +246,7 @@ export default function ColorCompatibility() {
               </div>
 
               <div
-                className="w-48 h-48 md:w-56 md:h-56 rounded-full shadow-2xl absolute left-1/2 -translate-x-[15%] mix-blend-multiply flex flex-col items-center justify-center text-center p-4 transition-all duration-1000"
+                className="w-36 h-36 md:w-56 md:h-56 rounded-full shadow-2xl absolute left-1/2 -translate-x-[15%] mix-blend-multiply flex flex-col items-center justify-center text-center p-4 transition-all duration-1000"
                 style={{
                   backgroundColor: color2.hex,
                   color: getContrastYIQ(color2.hex),
@@ -269,7 +272,7 @@ export default function ColorCompatibility() {
               ></div>
 
               <h3 className="text-sm font-bold uppercase tracking-widest text-indigo-500 mb-4 ml-4">
-                Анализ совместимости
+                Символическая интерпретация сочетания
               </h3>
               <h2 className="text-3xl md:text-4xl font-black font-serif mb-6 ml-4 text-gray-900">
                 {families.f1} + {families.f2}
@@ -277,52 +280,16 @@ export default function ColorCompatibility() {
               <p className="text-xl md:text-2xl leading-relaxed text-gray-600 ml-4">
                 {resultText}
               </p>
+              <p className="ml-4 mt-6 text-sm text-gray-500">Описание — образная трактовка цветовых семейств, а не психологический тест отношений.</p>
+              <Link href="/moon-phase" className="ml-4 mt-6 inline-block font-bold text-indigo-700">Сравнить ещё и фазы Луны →</Link>
             </div>
           </div>
         )}
-        <article className="mt-32 pt-16 border-t border-gray-200 prose prose-lg max-w-4xl mx-auto text-gray-600">
-          <h2 className="text-3xl font-black font-serif text-gray-900 mb-6">
-            Как работает совместимость по цветам?
-          </h2>
-          <p>
-            В психологии цвета каждый оттенок несет в себе определенный набор
-            вибраций и характеристик. Когда два человека вступают в отношения
-            (романтические, дружеские или деловые), их "цвета души" начинают
-            взаимодействовать. Это явление мы называем{" "}
-            <strong>цветовой химией</strong>.
-          </p>
-          <p>
-            Наш калькулятор переводит даты вашего рождения в персональные
-            оттенки по японской системе <strong>Tanjoshoku</strong>. Затем с
-            помощью математического алгоритма (основанного на цветовом
-            пространстве HSL) мы определяем вашу базовую стихию: Огонь
-            (Красный/Оранжевый), Вода (Синий), Природа (Зеленый) и так далее.
-          </p>
-          <h3 className="text-xl font-bold text-gray-900 mt-8 mb-4">
-            Почему некоторые цвета притягиваются?
-          </h3>
-          <ul>
-            <li>
-              <strong>Комплементарные цвета</strong> (находящиеся на
-              противоположных сторонах цветового круга, например Желтый и Синий)
-              создают мощный контраст. Они притягиваются как магниты, так как
-              партнеры закрывают "слепые зоны" друг друга.
-            </li>
-            <li>
-              <strong>Родственные цвета</strong> (например, Зеленый и Синий)
-              создают невероятно комфортные, спокойные отношения без резких
-              перепадов.
-            </li>
-            <li>
-              <strong>Смешение света и тьмы</strong> (Белый и Серый/Черный)
-              создает классический баланс Инь и Ян, где один партнер выступает
-              новатором, а второй — надежной опорой.
-            </li>
-          </ul>
-          <p>
-            Проверьте свою совместимость, чтобы лучше понимать динамику ваших
-            отношений и научиться гармонично дополнять друг друга!
-          </p>
+        <article className="mt-16 max-w-3xl space-y-5 border-t border-gray-200 pt-10 text-gray-600">
+          <h2 className="font-serif text-3xl font-bold text-gray-900">Как использовать палитру пары</h2>
+          <p>Выберите один оттенок основным, а второй используйте в деталях: открытке, упаковке подарка, совместной фотографии или декоре. Можно добавить нейтральный фон, чтобы цвета лучше различались.</p>
+          <details className="border-t py-4"><summary className="cursor-pointer font-semibold text-gray-900">Как определяются цвета?</summary><p className="mt-3">День и месяц каждой даты сопоставляются с японским календарём сайта. Описание сочетания выбирается по семействам оттенков. Год рождения не участвует в расчёте.</p></details>
+          <details className="border-t py-4"><summary className="cursor-pointer font-semibold text-gray-900">Одинаковые цвета — это хороший результат?</summary><p className="mt-3">Это значит, что ваши даты связаны с одинаковыми или похожими оттенками. У палитры нет оценки «хорошо» или «плохо»: выбирайте сочетание, которое нравится вам обоим.</p></details>
         </article>
       </div>
     </main>

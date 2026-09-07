@@ -42,6 +42,7 @@ export default function NumerologyCalculator() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
+          aria-label="Дата рождения"
           type="date"
           required
           value={date}

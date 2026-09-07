@@ -1,22 +1,8 @@
 import type { Metadata } from "next";
-
 export const metadata: Metadata = {
-  title: "Цвет Ауры по дате рождения | Ведическая нумерология чакр",
-  description:
-    "Рассчитайте цвет вашей ауры и доминирующую чакру по дате рождения. Бесплатный калькулятор энергетики (Муладхара, Анахата, Аджна и др.).",
-  keywords: [
-    "цвет ауры по дате рождения",
-    "рассчитать цвет ауры",
-    "доминирующая чакра по дате",
-    "какая у меня аура",
-    "ведическая нумерология",
-  ],
+  title: "Цвет ауры по дню рождения — калькулятор и таблица чакр",
+  description: "Выберите день рождения и посмотрите символический цвет ауры. Открытая таблица чисел и чакр, пример расчёта и объяснение ограничений.",
+  alternates: { canonical: "https://colorstrology.ru/aura" },
+  openGraph: { title: "Цвет ауры по дню рождения — калькулятор и таблица чакр", description: "Выберите день рождения и посмотрите символический цвет ауры. Открытая таблица чисел и чакр, пример расчёта и объяснение ограничений.", url: "https://colorstrology.ru/aura", type: "website" },
 };
-
-export default function AuraLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return children;
-}
+export default function Layout({children}: {children: React.ReactNode}) { return children; }

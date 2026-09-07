@@ -95,7 +95,7 @@ export default function Footer() {
                 href="/moon-phase"
                 className="hover:text-white transition-colors"
               >
-                Совместимость Лун (Тренд)
+                Совместимость Лун
               </Link>
             </li>
           </ul>
