@@ -132,6 +132,12 @@ export default function Footer() {
               </Link>
             </li>
             <li>
+              <Link href="/tarot/karta-dnya" className="hover:text-white transition-colors">Таро — карта дня</Link>
+            </li>
+            <li>
+              <Link href="/tarot/tri-karty" className="hover:text-white transition-colors">Таро — три карты</Link>
+            </li>
+            <li>
               <a
                 href="mailto:hello@viktoor.ru"
                 className="hover:text-white transition-colors"

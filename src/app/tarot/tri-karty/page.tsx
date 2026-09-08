@@ -1,0 +1,11 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import TarotSpread from "@/components/TarotSpread";
+export const metadata: Metadata = {
+  title:"Таро на три карты онлайн — ситуация, препятствие, совет",
+  description:"Бесплатный расклад Таро на три карты из колоды 78 арканов. Значения по позициям: ситуация, препятствие и совет. Без регистрации.",
+  alternates:{canonical:"https://colorstrology.ru/tarot/tri-karty"},
+  openGraph:{title:"Таро на три карты — расклад онлайн",description:"Ситуация, препятствие и совет: три карты с пояснениями.",url:"https://colorstrology.ru/tarot/tri-karty",type:"website"},
+};
+export default function Page(){return <main className="min-h-screen bg-[#F7F5F0] py-8 md:py-14 px-4"><div className="max-w-5xl mx-auto"><Breadcrumbs items={[{label:"Таро на три карты"}]}/><nav aria-label="Расклады Таро" className="flex gap-3 mb-7 text-sm"><Link className="rounded-full border px-4 py-3" href="/tarot/karta-dnya">Карта дня</Link><span aria-current="page" className="rounded-full bg-slate-900 text-white px-4 py-3">Три карты</span></nav><h1 className="text-4xl md:text-5xl font-serif font-bold mb-5">Таро на три карты онлайн</h1><p className="text-lg text-gray-600">Ситуация, препятствие и совет — три стороны одного вопроса. Получите расклад из полной колоды 78 карт без повторов внутри расклада.</p><TarotSpread/><section className="mt-14 border-t pt-8 space-y-5 text-gray-700"><h2 className="text-2xl font-bold">Как устроен расклад</h2><p>Первая карта задаёт тему, вторая показывает аспект, требующий внимания, третья предлагает действие. Значения написаны редакцией для каждой карты и показаны в контексте её позиции. Перевёрнутые положения не используются.</p><h2 className="text-xl font-bold">Чем отличается от карты дня?</h2><p>Карта дня сохраняется до полуночи. Этот расклад можно начать заново; при обновлении страницы он сбрасывается. Чтобы сохранить результат, скопируйте его.</p><p className="text-sm text-gray-500">Таро — символическая интерпретация, не достоверное предсказание. Не принимайте решения о здоровье, деньгах и безопасности по случайным картам.</p><Link href="/tarot/karta-dnya" className="text-indigo-700 underline font-bold">Вытянуть карту на сегодня →</Link></section></div></main>;}

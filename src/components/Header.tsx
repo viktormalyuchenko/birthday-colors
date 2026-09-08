@@ -161,7 +161,13 @@ export default function Header() {
               href="/horoscopes"
               className="flex justify-center items-center py-4 bg-gray-900 text-white rounded-2xl font-bold uppercase tracking-widest text-sm shadow-xl active:scale-95 transition-transform"
             >
-              Таро и Гороскопы
+              Гороскопы
+            </Link>
+            <Link href="/tarot/karta-dnya" className="mt-3 flex items-center justify-center rounded-2xl border border-gray-200 bg-white py-4 text-sm font-bold text-gray-900">
+              Таро — карта дня
+            </Link>
+            <Link href="/tarot/tri-karty" className="mt-3 flex items-center justify-center rounded-2xl border border-gray-200 bg-white py-4 text-sm font-bold text-gray-900">
+              Таро — три карты
             </Link>
             <Link
               href="/articles"
@@ -187,7 +193,7 @@ export default function Header() {
         </Link>
 
         {/* НАВИГАЦИЯ ДЕСКТОП */}
-        <nav className="hidden lg:flex gap-8 text-xs font-bold uppercase tracking-[0.15em] text-gray-500 items-center">
+        <nav className="hidden lg:flex gap-5 xl:gap-8 text-xs font-bold uppercase tracking-[0.15em] text-gray-500 items-center">
           <Link
             href="/japanese-colors"
             className="hover:text-gray-900 transition-colors"
@@ -269,6 +275,9 @@ export default function Header() {
             className="hover:text-gray-900 transition-colors"
           >
             Гороскопы
+          </Link>
+          <Link href="/tarot/karta-dnya" className="hover:text-gray-900 transition-colors">
+            Таро
           </Link>
         </nav>
 

@@ -377,6 +377,14 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="max-w-7xl mx-auto px-4 mb-16">
+        <Link href="/tarot/karta-dnya" className="block rounded-3xl bg-[#171B2F] p-7 md:p-10 text-white">
+          <p className="text-xs uppercase tracking-widest text-amber-200 mb-3">Таро онлайн · 78 карт</p>
+          <h2 className="text-3xl font-serif font-bold mb-3">Карта дня и её палитра</h2>
+          <p className="text-slate-300 mb-5 max-w-xl">Случайная карта, тема дня и три оттенка для вдохновения. Результат останется с вами до завтра.</p>
+          <span className="font-bold text-amber-100">Вытянуть карту →</span>
+        </Link>
+      </section>
       <section className="mx-auto mb-16 grid max-w-7xl gap-5 px-4 md:grid-cols-2" aria-label="Два способа сравнить пару">
         <Link href="/moon-phase" className="relative overflow-hidden rounded-3xl bg-[#141727] p-7 text-white md:p-10">
           <div aria-hidden="true" className="mb-6 flex gap-3 text-5xl text-indigo-100">◐ ◑</div>

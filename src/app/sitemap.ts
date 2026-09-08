@@ -41,6 +41,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
 
+    { url: `${BASE_URL}/tarot/karta-dnya`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${BASE_URL}/tarot/tri-karty`, changeFrequency: "monthly", priority: 0.6 },
     // Калькуляторы и тесты
     {
       url: `${BASE_URL}/numerology`,
