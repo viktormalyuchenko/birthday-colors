@@ -17,7 +17,7 @@ date_end: "2026-09-20"
 
 ## Семь цветов недели
 
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:24px 0">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:12px;margin:24px 0;font-size:15px;line-height:1.6;overflow-wrap:anywhere">
   <div style="background:#BF783E;color:#17202A;padding:22px 10px;border-radius:14px;text-align:center"><strong>14 сентября</strong><br>Рыжевато-коричневый<br><small>#BF783E</small></div>
   <div style="background:#8A3B00;color:#FFFFFF;padding:22px 10px;border-radius:14px;text-align:center"><strong>15 сентября</strong><br>Тёмно-янтарный<br><small>#8A3B00</small></div>
   <div style="background:#BD6856;color:#17202A;padding:22px 10px;border-radius:14px;text-align:center"><strong>16 сентября</strong><br>Терракотовый<br><small>#BD6856</small></div>
@@ -148,4 +148,3 @@ date_end: "2026-09-20"
 ### Где посмотреть прогноз на эту неделю?
 
 [Гороскоп на 14–20 сентября для всех знаков](/horoscopes/goroskop-na-nedelyu-14-20-sentyabrya-2026) опубликован отдельно. Палитры не являются частью того прогноза.
-
