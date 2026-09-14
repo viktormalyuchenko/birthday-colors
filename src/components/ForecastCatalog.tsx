@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { paginationItems } from "@/lib/pagination";
 
 interface Post {
   slug: string;
@@ -247,23 +248,27 @@ export default function ForecastCatalog({
 
           {/* ПАГИНАЦИЯ (Рендерится только на клиенте) */}
           {isMounted && totalPages > 1 && (
-            <div className="flex justify-center items-center gap-2 mt-12">
+            <nav aria-label="Страницы прогнозов" className="flex flex-wrap justify-center items-center gap-3 mt-12">
               <button
                 disabled={currentPage <= 1}
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                className="px-4 py-2 rounded-xl font-bold text-sm bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="order-2 sm:order-1 min-h-11 px-4 py-2 rounded-xl font-bold text-sm bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 ← Назад
               </button>
 
-              <div className="flex items-center gap-2 px-4">
-                {Array.from({ length: totalPages }).map((_, i) => (
+              <div className="order-1 sm:order-2 basis-full sm:basis-auto flex flex-wrap justify-center items-center gap-1">
+                {paginationItems(currentPage, totalPages).map((item) => typeof item === "string" ? (
+                  <span key={item} className="w-4 text-center text-gray-400" aria-hidden="true">…</span>
+                ) : (
                   <button
-                    key={i}
-                    onClick={() => setCurrentPage(i + 1)}
-                    className={`w-10 h-10 rounded-xl font-bold text-sm transition-colors ${currentPage === i + 1 ? "bg-indigo-600 text-white shadow-md" : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"}`}
+                    key={item}
+                    aria-label={`Страница ${item}`}
+                    aria-current={currentPage === item ? "page" : undefined}
+                    onClick={() => setCurrentPage(item)}
+                    className={`min-w-11 h-11 px-2 rounded-xl font-bold text-sm transition-colors ${currentPage === item ? "bg-indigo-600 text-white shadow-md" : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"}`}
                   >
-                    {i + 1}
+                    {item}
                   </button>
                 ))}
               </div>
@@ -273,11 +278,12 @@ export default function ForecastCatalog({
                 onClick={() =>
                   setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                 }
-                className="px-4 py-2 rounded-xl font-bold text-sm bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="order-3 min-h-11 px-4 py-2 rounded-xl font-bold text-sm bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Вперед →
               </button>
-            </div>
+              <p aria-live="polite" className="order-4 basis-full text-center text-sm text-gray-500">Страница {currentPage} из {totalPages}</p>
+            </nav>
           )}
         </>
       ) : (
