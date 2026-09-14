@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+<title id="title">Цвета недели: 14–20 сентября 2026</title>
+<desc id="desc">Градиент семи оттенков: коричневый, янтарный, терракотовый, зелёный, голубой, фиолетовый и лимонный.</desc>
+<defs><linearGradient id="week" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0.00%" stop-color="#BF783E"/>
+<stop offset="16.67%" stop-color="#8A3B00"/>
+<stop offset="33.33%" stop-color="#BD6856"/>
+<stop offset="50.00%" stop-color="#7DBB7D"/>
+<stop offset="66.67%" stop-color="#BCCDDB"/>
+<stop offset="83.33%" stop-color="#7C7684"/>
+<stop offset="100.00%" stop-color="#FFFCBF"/>
+</linearGradient></defs>
+<rect width="1200" height="630" fill="url(#week)"/>
+<rect x="56" y="176" width="1088" height="278" rx="28" fill="#15202B" fill-opacity=".82"/>
+<g fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif">
+<text x="90" y="238" font-size="24" letter-spacing="3">COLORSTROLOGY · ПАЛИТРА НА КАЖДЫЙ ДЕНЬ</text>
+<text x="86" y="332" font-size="76" font-weight="700">Цвета недели</text>
+<text x="90" y="401" font-size="42">14–20 сентября 2026</text>
+</g>
+<circle cx="90" cy="513" r="17" fill="#BF783E" stroke="#FFFFFF" stroke-width="2"/>
+<circle cx="138" cy="513" r="17" fill="#8A3B00" stroke="#FFFFFF" stroke-width="2"/>
+<circle cx="186" cy="513" r="17" fill="#BD6856" stroke="#FFFFFF" stroke-width="2"/>
+<circle cx="234" cy="513" r="17" fill="#7DBB7D" stroke="#FFFFFF" stroke-width="2"/>
+<circle cx="282" cy="513" r="17" fill="#BCCDDB" stroke="#FFFFFF" stroke-width="2"/>
+<circle cx="330" cy="513" r="17" fill="#7C7684" stroke="#FFFFFF" stroke-width="2"/>
+<circle cx="378" cy="513" r="17" fill="#FFFCBF" stroke="#FFFFFF" stroke-width="2"/>
+</svg>
+
